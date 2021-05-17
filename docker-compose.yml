@@ -1,0 +1,51 @@
+services:
+  db-postgresql:
+    image: postgres
+    container_name: db-postgresql
+    ports:
+      - 5010:5432
+    volumes:
+      - ./db-init/postgres-init.sql:/docker-entrypoint-initdb.d/postgres-init.sql:ro
+    environment:
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: student
+      POSTGRES_DATABASE: student
+
+  db-mongo:
+    image: mongo
+    container_name: db-mongo
+    ports:
+      - 8081:8081
+    volumes:
+      - ./db-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+  db-oracle:
+    image: oracleinanutshell/oracle-xe-11g:latest
+    container_name: db-oracle
+    ports:
+      - 1522:1521
+      - 5501:5500
+    volumes:
+      - ./db-init/oracle-init.sql:/docker-entrypoint-initdb.d/oracle-init.sql:ro
+
+  db-mysql:
+    image: mysql
+    container_name: db-mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db-init/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+
+  db-oracle-final:
+    image: oracleinanutshell/oracle-xe-11g:latest
+    container_name: db-oracle-final
+    ports:
+      - 1521:1521
+      - 5500:5500
+    volumes:
+      - ./db-init/oracle-final-init.sql:/docker-entrypoint-initdb.d/oracle-final-init.sql:ro

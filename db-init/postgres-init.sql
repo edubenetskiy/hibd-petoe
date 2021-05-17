@@ -1,0 +1,139 @@
+CREATE TABLE specialty
+(
+    specialty_id            SERIAL       NOT NULL,
+    specialty_code          CHAR(8)      NOT NULL,
+    specialty_name          VARCHAR(255) NOT NULL,
+    specialty_qualification VARCHAR(40)  NOT NULL,
+    standard                CHAR(100)    NOT NULL,
+    form_of_study           CHAR(100)    NOT NULL,
+    place_of_study          VARCHAR(255) NOT NULL,
+    PRIMARY KEY (specialty_id),
+    CONSTRAINT specialty_code UNIQUE (specialty_code)
+);
+
+INSERT INTO specialty (specialty_code,
+                       specialty_name,
+                       specialty_qualification,
+                       standard,
+                       form_of_study,
+                       place_of_study)
+VALUES ('09.03.04',
+        'Разработка программноинформационных систем',
+        'Академический магистр',
+        'новый',
+        'очная',
+        'ПИиКТ');
+
+CREATE TABLE students
+(
+    student_id         SERIAL       NOT NULL,
+    student_name       VARCHAR(255) NOT NULL,
+    student_surname    VARCHAR(255) NOT NULL,
+    student_patronymic VARCHAR(255) NOT NULL,
+    specialty_id       INTEGER      NOT NULL,
+    CONSTRAINT specialty FOREIGN KEY (specialty_id) REFERENCES specialty (specialty_id) ON DELETE CASCADE,
+    PRIMARY KEY (student_id)
+);
+
+INSERT INTO students (student_name,
+                      student_surname,
+                      student_patronymic,
+                      specialty_id)
+VALUES ('Сидоров', 'Иван', 'Петрович', 1);
+
+CREATE TABLE lecturers
+(
+    lecturer_id         SERIAL       NOT NULL,
+    lecturer_name       VARCHAR(255) NOT NULL,
+    lecturer_surname    VARCHAR(255) NOT NULL,
+    lecturer_patronymic VARCHAR(255) NOT NULL,
+    PRIMARY KEY (lecturer_id)
+);
+
+INSERT INTO lecturers (lecturer_name,
+                       lecturer_surname,
+                       lecturer_patronymic)
+VALUES ('Смирнов', 'Павел', 'Сергеевич');
+
+CREATE TABLE subjects
+(
+    subject_id      SERIAL       NOT NULL,
+    subject_name    VARCHAR(255) NOT NULL,
+    subject_code    VARCHAR(20)  NOT NULL,
+    lectures        INTEGER      NOT NULL,
+    workshops       INTEGER      NOT NULL,
+    laboratories    INTEGER      NOT NULL,
+    form_of_control CHAR(100)    NOT NULL,
+    PRIMARY KEY (subject_id)
+);
+
+INSERT INTO subjects (subject_name,
+                      subject_code,
+                      lectures,
+                      workshops,
+                      laboratories,
+                      form_of_control)
+VALUES ('Компьютерная графика',
+        '2018449043-И',
+        10,
+        10,
+        10,
+        'экзамен');
+
+CREATE TABLE lecturers_to_subjects
+(
+    lecturer_id INTEGER NOT NULL,
+    subject_id  INTEGER NOT NULL,
+    CONSTRAINT lecturers FOREIGN KEY (lecturer_id) REFERENCES lecturers (lecturer_id) ON DELETE CASCADE,
+    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE CASCADE
+);
+
+INSERT INTO lecturers_to_subjects (lecturer_id, subject_id)
+VALUES ('1', '1');
+
+CREATE TABLE specialtys_to_subjects
+(
+    specialty_id INTEGER NOT NULL,
+    subject_id   INTEGER NOT NULL,
+    semester     INTEGER NOT NULL,
+    CONSTRAINT specialty FOREIGN KEY (specialty_id) REFERENCES specialty (specialty_id) ON DELETE CASCADE,
+    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE CASCADE,
+    CONSTRAINT semester CHECK (
+            semester > 0
+            AND semester <= 10
+        )
+);
+
+INSERT INTO specialtys_to_subjects (specialty_id, subject_id, semester)
+VALUES ('1', '1', '1');
+
+CREATE TABLE record_book
+(
+    student_id  INTEGER NOT NULL,
+    subject_id  INTEGER NOT NULL,
+    lecturer_id INTEGER NOT NULL,
+    points      INTEGER NOT NULL,
+    date        DATE    NOT NULL,
+    CONSTRAINT students FOREIGN KEY (student_id) REFERENCES students (student_id) ON DELETE CASCADE,
+    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE
+        SET
+        NULL,
+    CONSTRAINT lecturers FOREIGN KEY (lecturer_id) REFERENCES lecturers (lecturer_id) ON DELETE
+        SET
+        NULL,
+    CONSTRAINT points CHECK (
+            points > 0
+            AND points <= 100
+        )
+);
+
+INSERT INTO record_book (student_id,
+                         subject_id,
+                         lecturer_id,
+                         points,
+                         date)
+VALUES ('1',
+        '1',
+        '1',
+        '100',
+        '2021-04-28 11:21:00+03:00');
