@@ -1,7 +1,7 @@
 package ru.itmo.se.hibd.lab1.importer.app;
 
 import ru.itmo.se.hibd.lab1.importer.core.Record;
-import ru.itmo.se.hibd.lab1.importer.core.SourceDatabase;
+import ru.itmo.se.hibd.lab1.importer.core.Database;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 import ru.itmo.se.hibd.lab1.importer.core.TargetDatabase;
 import ru.itmo.se.hibd.lab1.importer.core.WritableStorage;
@@ -13,7 +13,7 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
         // Подключиться ко всех исходным БД
-        Collection<SourceDatabase> sourceDatabases = connectToSourceDatabases();
+        Collection<Database> sourceDatabases = connectToSourceDatabases();
         // Подключиться к временной БД
         WritableStorage temporaryStorage = connectToTemporaryStorage();
         // Подключиться к целевой БД
@@ -21,7 +21,7 @@ public class Main {
 
         // ШАГ 1: Преобразование и экспорт
         // Для каждой исходной БД
-        for (SourceDatabase sourceDatabase : sourceDatabases) {
+        for (Database sourceDatabase : sourceDatabases) {
             //      Для каждой таблицы в исходной БД
             for (Table table : sourceDatabase.getTables()) {
                 //          Для каждой строки из таблицы исходной БД
@@ -71,7 +71,7 @@ public class Main {
         throw new UnsupportedOperationException("not implemented yet"); // TODO
     }
 
-    private static Collection<SourceDatabase> connectToSourceDatabases() {
+    private static Collection<Database> connectToSourceDatabases() {
         // TODO: Подключиться к БД Mongo и создать экземпляр SourceDatabase для этой БД
         // TODO: Подключиться к БД MySQL и создать экземпляр SourceDatabase для этой БД
         // TODO: Подключиться к БД Oracle и создать экземпляр SourceDatabase для этой БД
