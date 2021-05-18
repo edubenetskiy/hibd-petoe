@@ -15,7 +15,7 @@ services:
     image: mongo
     container_name: db-mongo
     ports:
-      - 8081:8081
+      - 27017:27017
     volumes:
       - ./db-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
