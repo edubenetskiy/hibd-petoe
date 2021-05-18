@@ -4,6 +4,9 @@ import org.bson.Document;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class MongoDocumentRecord implements Record {
 
     private final MongoCollectionTable table;
@@ -33,5 +36,10 @@ public class MongoDocumentRecord implements Record {
                ", id=" + id +
                ", document=" + document +
                '}';
+    }
+
+    @Override
+    public Map<String, Object> getColumnValues() {
+        return Collections.unmodifiableMap(document);
     }
 }
