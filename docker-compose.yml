@@ -39,6 +39,7 @@ services:
     volumes:
       - ./db-init/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql:ro
     environment:
+      - MYSQL_DATABASE=mysqldb
       - MYSQL_ROOT_PASSWORD=admin
 
   db-oracle-final:
