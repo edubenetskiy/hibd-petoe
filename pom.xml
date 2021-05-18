@@ -13,11 +13,14 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.version>1.7.30</slf4j.version>
     </properties>
 
     <modules>
         <module>db-merger-app</module>
         <module>db-merger-core</module>
+        <module>database-mongo</module>
+        <module>in-memory-storage</module>
     </modules>
 
     <dependencyManagement>
@@ -25,6 +28,16 @@
             <dependency>
                 <groupId>ru.itmo.se.hibd.petoe</groupId>
                 <artifactId>hibd-petoe-db-merger-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.itmo.se.hibd.petoe</groupId>
+                <artifactId>database-mongo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.itmo.se.hibd.petoe</groupId>
+                <artifactId>in-memory-storage</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 
@@ -37,7 +50,28 @@
                 <version>3.20.0</version>
                 <scope>import</scope>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+            <!-- SLF4J (http://www.slf4j.org/) - Simple Logging Facade for Java -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+        </dependency>
+    </dependencies>
 </project>

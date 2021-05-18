@@ -1,23 +1,27 @@
 package ru.itmo.se.hibd.lab1.importer.app;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import lombok.extern.slf4j.Slf4j;
 import ru.itmo.se.hibd.lab1.importer.core.Storage;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 import ru.itmo.se.hibd.lab1.importer.core.TargetDatabase;
 import ru.itmo.se.hibd.lab1.importer.core.WritableStorage;
+import ru.itmo.se.hibd.petoe.database.mongo.MongoStorage;
+import ru.itmo.se.hibd.petoe.inmemorystorage.InMemoryWritableStorage;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class Main {
     public static void main(String[] args) {
         // Подключиться ко всех исходным БД
         Collection<Storage> sourceStorages = connectToSourceDatabases();
         // Подключиться к временной БД
         WritableStorage temporaryStorage = connectToTemporaryStorage();
-        // Подключиться к целевой БД
-        TargetDatabase targetDatabase = connectToTargetDatabase();
 
         // ШАГ 1: Преобразование и экспорт
         // Для каждой исходной БД
@@ -29,12 +33,15 @@ public class Main {
                     // Проверить, что в строке нет колонок, отсутствующих в целевой схеме
                     validateRecord(record);
                     // Записать строку и признак исходного хранилища в временное хранилище
+                    log.debug("Writing record to temporary storage: {}", record);
                     temporaryStorage.writeRecord(record);
                 }
             }
         }
 
         // ШАГ 2: Объединение и импорт
+        // Подключиться к целевой БД
+        TargetDatabase targetDatabase = connectToTargetDatabase();
         // Для каждой таблицы во временной БД
         for (Table table : temporaryStorage.getTables()) {
             // Сгруппировать записи в таблице по ИД
@@ -67,16 +74,22 @@ public class Main {
     }
 
     private static WritableStorage connectToTemporaryStorage() {
-        // TODO: Создать примитивное хранилище в памяти на основе HashMap или других коллекций
-        throw new UnsupportedOperationException("not implemented yet"); // TODO
+        return new InMemoryWritableStorage();
     }
 
     private static Collection<Storage> connectToSourceDatabases() {
         // TODO: Подключиться к БД Mongo и создать экземпляр SourceDatabase для этой БД
+        Storage mongoStorage = connectToMongoDatabase();
         // TODO: Подключиться к БД MySQL и создать экземпляр SourceDatabase для этой БД
         // TODO: Подключиться к БД Oracle и создать экземпляр SourceDatabase для этой БД
         // TODO: Подключиться к БД PostgreSQL и создать экземпляр SourceDatabase для этой БД
         // TODO: Вернуть коллекцию подключений ко всем БД
-        return List.of();
+        return List.of(mongoStorage);
+    }
+
+    private static Storage connectToMongoDatabase() {
+        MongoClient mongoClient = MongoClients.create("mongodb://admin:admin@localhost/");
+        com.mongodb.client.MongoDatabase mongoDatabaseConnection = mongoClient.getDatabase("test");
+        return new MongoStorage(mongoDatabaseConnection);
     }
 }
