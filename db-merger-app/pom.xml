@@ -24,6 +24,10 @@
         </dependency>
         <dependency>
             <groupId>ru.itmo.se.hibd.petoe</groupId>
+            <artifactId>database-mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.itmo.se.hibd.petoe</groupId>
             <artifactId>database-oracle</artifactId>
         </dependency>
         <dependency>

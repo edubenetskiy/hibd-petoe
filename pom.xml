@@ -20,6 +20,7 @@
         <module>db-merger-app</module>
         <module>db-merger-core</module>
         <module>database-mongo</module>
+        <module>database-mysql</module>
         <module>database-oracle</module>
         <module>in-memory-storage</module>
     </modules>
@@ -34,6 +35,11 @@
             <dependency>
                 <groupId>ru.itmo.se.hibd.petoe</groupId>
                 <artifactId>database-mongo</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.itmo.se.hibd.petoe</groupId>
+                <artifactId>database-mysql</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
