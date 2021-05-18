@@ -75,7 +75,10 @@ public class Main {
     private static Record mergeRecords(Collection<Record> records) {
         // Объединить данные для одной и той же строки из разных БД в одну строку для целевой БД.
         // TODO: Для каждой колонки выбрать не-NULL значения, из них - значение из БД с наибольшим приоритетом.
-        return null;
+        if (records.size() == 1) {
+            return records.iterator().next();
+        }
+        throw new IllegalStateException("don't know how to merge records");
     }
 
     private static WritableStorage connectToTemporaryStorage() {
