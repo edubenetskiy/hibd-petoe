@@ -3,6 +3,7 @@ package ru.itmo.se.hibd.lab1.importer.app;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
+import org.jdbi.v3.core.Jdbi;
 import ru.itmo.se.hibd.lab1.importer.core.ClusterizableTable;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Storage;
@@ -10,6 +11,7 @@ import ru.itmo.se.hibd.lab1.importer.core.Table;
 import ru.itmo.se.hibd.lab1.importer.core.TargetDatabase;
 import ru.itmo.se.hibd.lab1.importer.core.WritableStorage;
 import ru.itmo.se.hibd.petoe.database.mongo.MongoStorage;
+import ru.itmo.se.hibd.petoe.database.oracle.OracleTargetDatabase;
 import ru.itmo.se.hibd.petoe.inmemorystorage.InMemoryWritableStorage;
 
 import java.util.Collection;
@@ -65,7 +67,8 @@ public class Main {
 
     private static TargetDatabase connectToTargetDatabase() {
         // TODO: Подключиться к целевой схеме Oracle и создать экземпляр TargetDatabase
-        throw new UnsupportedOperationException("not implemented yet");
+        Jdbi jdbi = Jdbi.create("jdbc:oracle:thin:@localhost:1521:XE", "hibd", "hibd");
+        return new OracleTargetDatabase(jdbi);
     }
 
     private static Record mergeRecords(Collection<Record> records) {
