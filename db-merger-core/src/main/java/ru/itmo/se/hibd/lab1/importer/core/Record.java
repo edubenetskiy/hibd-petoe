@@ -6,6 +6,10 @@ public interface Record {
 
     Table getTable();
 
+    default String getTableName() {
+        return getTable().getName();
+    }
+
     Object getId();
 
     Map<String, Object> getColumnValues();

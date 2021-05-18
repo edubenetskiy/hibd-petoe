@@ -20,7 +20,7 @@ public class InMemoryWritableStorage implements WritableStorage {
 
     @Override
     public void writeRecord(Record record) {
-        String tableName = record.getTable().getName();
+        String tableName = record.getTableName();
         InMemoryTable inMemoryTable = tableByName.computeIfAbsent(tableName, InMemoryTable::new);
         inMemoryTable.save(record);
     }
