@@ -1,7 +1,7 @@
 package ru.itmo.se.hibd.petoe.inmemorystorage;
 
+import ru.itmo.se.hibd.lab1.importer.core.ClusterizableTable;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
-import ru.itmo.se.hibd.lab1.importer.core.Table;
 import ru.itmo.se.hibd.lab1.importer.core.WritableStorage;
 
 import java.util.Collection;
@@ -14,7 +14,7 @@ public class InMemoryWritableStorage implements WritableStorage {
     private final Map<String, InMemoryTable> tableByName = new HashMap<>();
 
     @Override
-    public Collection<Table> getTables() {
+    public Collection<ClusterizableTable> getTables() {
         return Collections.unmodifiableCollection(tableByName.values());
     }
 

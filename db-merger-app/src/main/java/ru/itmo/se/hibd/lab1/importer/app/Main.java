@@ -3,8 +3,9 @@ package ru.itmo.se.hibd.lab1.importer.app;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
-import ru.itmo.se.hibd.lab1.importer.core.Storage;
+import ru.itmo.se.hibd.lab1.importer.core.ClusterizableTable;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
+import ru.itmo.se.hibd.lab1.importer.core.Storage;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 import ru.itmo.se.hibd.lab1.importer.core.TargetDatabase;
 import ru.itmo.se.hibd.lab1.importer.core.WritableStorage;
@@ -43,7 +44,7 @@ public class Main {
         // Подключиться к целевой БД
         TargetDatabase targetDatabase = connectToTargetDatabase();
         // Для каждой таблицы во временной БД
-        for (Table table : temporaryStorage.getTables()) {
+        for (ClusterizableTable table : temporaryStorage.getTables()) {
             // Сгруппировать записи в таблице по ИД
             Map<Object, Collection<Record>> recordsById = table.groupRecordsById();
             // Для каждого уникального ИД в таблице временной БД,

@@ -2,13 +2,14 @@ package ru.itmo.se.hibd.petoe.inmemorystorage;
 
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import ru.itmo.se.hibd.lab1.importer.core.ClusterizableTable;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 
 import java.util.Collection;
 import java.util.Map;
 
-public class InMemoryTable implements Table {
+public class InMemoryTable implements Table, ClusterizableTable {
 
     String name;
 

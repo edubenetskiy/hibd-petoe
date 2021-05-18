@@ -7,9 +7,6 @@ import org.bson.Document;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 
-import java.util.Collection;
-import java.util.Map;
-
 @Builder
 public class MongoCollectionTable implements Table {
 
@@ -30,11 +27,6 @@ public class MongoCollectionTable implements Table {
             Object id = document.get("_id");
             return new MongoDocumentRecord(table, id, document);
         });
-    }
-
-    @Override
-    public Map<Object, Collection<Record>> groupRecordsById() {
-        return Map.of(); // TODO
     }
 
     @Override

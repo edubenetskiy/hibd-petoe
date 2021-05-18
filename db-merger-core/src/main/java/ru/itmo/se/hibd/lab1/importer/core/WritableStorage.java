@@ -4,7 +4,7 @@ import java.util.Collection;
 
 public interface WritableStorage {
 
-    Collection<Table> getTables();
+    Collection<ClusterizableTable> getTables();
 
     void writeRecord(Record record);
 }
