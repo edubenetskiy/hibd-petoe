@@ -24,6 +24,7 @@
         <module>database-oracle</module>
         <module>in-memory-storage</module>
         <module>database-oracle-source</module>
+        <module>database-postgresql</module>
     </modules>
 
     <dependencyManagement>
@@ -51,6 +52,11 @@
             <dependency>
                 <groupId>ru.itmo.se.hibd.petoe</groupId>
                 <artifactId>database-oracle-source</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.itmo.se.hibd.petoe</groupId>
+                <artifactId>database-postgresql</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>

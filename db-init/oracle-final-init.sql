@@ -68,7 +68,7 @@ CREATE TABLE speciality
     study_form    varchar2(100)  NOT NULL CHECK (study_form IN ('очная', 'заочная')),
     faculty_id    number         NOT NULL,
     FOREIGN KEY (faculty_id) REFERENCES faculty (id),
-    CONSTRAINT check_specialty_code CHECK (
+    CONSTRAINT check_speciality_code CHECK (
         REGEXP_LIKE(code, '[0-9]{2}\.[0-9]{2}\.[0-9]{2}')
         )
 );

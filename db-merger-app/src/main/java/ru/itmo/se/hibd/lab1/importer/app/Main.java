@@ -14,6 +14,7 @@ import ru.itmo.se.hibd.petoe.database.mongo.MongoStorage;
 import ru.itmo.se.hibd.petoe.database.mysql.MysqlStorage;
 import ru.itmo.se.hibd.petoe.database.oracle.OracleStorage;
 import ru.itmo.se.hibd.petoe.database.oracle.OracleTargetDatabase;
+import ru.itmo.se.hibd.petoe.database.postgresql.PostgresqlStorage;
 import ru.itmo.se.hibd.petoe.inmemorystorage.InMemoryWritableStorage;
 
 import java.util.Collection;
@@ -94,8 +95,9 @@ public class Main {
         // TODO: Подключиться к БД Oracle и создать экземпляр SourceDatabase для этой БД
         Storage oracleStorage = connectToOracleStorage();
         // TODO: Подключиться к БД PostgreSQL и создать экземпляр SourceDatabase для этой БД
+        Storage postgresqlStorage = connectToPostgresqlStorage();
         // TODO: Вернуть коллекцию подключений ко всем БД
-        return List.of(mongoStorage, mysqlStorage, oracleStorage);
+        return List.of(mongoStorage, mysqlStorage, oracleStorage, postgresqlStorage);
     }
 
     private static Storage connectToMongoDatabase() {
@@ -112,5 +114,10 @@ public class Main {
     private static Storage connectToOracleStorage() {
         Jdbi oracleJdbiConnection = Jdbi.create("jdbc:oracle:thin:@localhost:1522:XE", "orac", "orac");
         return new OracleStorage(oracleJdbiConnection);
+    }
+
+    private static Storage connectToPostgresqlStorage() {
+        Jdbi postgresqlJdbiConnection = Jdbi.create("jdbc:postgresql://localhost:5010/student", "student", "student");
+        return new PostgresqlStorage(postgresqlJdbiConnection);
     }
 }

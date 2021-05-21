@@ -36,6 +36,10 @@
         </dependency>
         <dependency>
             <groupId>ru.itmo.se.hibd.petoe</groupId>
+            <artifactId>database-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.itmo.se.hibd.petoe</groupId>
             <artifactId>in-memory-storage</artifactId>
         </dependency>
 
