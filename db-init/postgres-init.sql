@@ -1,19 +1,19 @@
-CREATE TABLE specialty
+CREATE TABLE speciality
 (
-    specialty_id            SERIAL       NOT NULL,
-    specialty_code          CHAR(8)      NOT NULL,
-    specialty_name          VARCHAR(255) NOT NULL,
-    specialty_qualification VARCHAR(40)  NOT NULL,
+    speciality_id            SERIAL       NOT NULL,
+    speciality_code          CHAR(8)      NOT NULL,
+    speciality_name          VARCHAR(255) NOT NULL,
+    speciality_qualification VARCHAR(40)  NOT NULL,
     standard                CHAR(100)    NOT NULL,
     form_of_study           CHAR(100)    NOT NULL,
     place_of_study          VARCHAR(255) NOT NULL,
-    PRIMARY KEY (specialty_id),
-    CONSTRAINT specialty_code UNIQUE (specialty_code)
+    PRIMARY KEY (speciality_id),
+    CONSTRAINT speciality_code UNIQUE (speciality_code)
 );
 
-INSERT INTO specialty (specialty_code,
-                       specialty_name,
-                       specialty_qualification,
+INSERT INTO speciality (speciality_code,
+                       speciality_name,
+                       speciality_qualification,
                        standard,
                        form_of_study,
                        place_of_study)
@@ -30,15 +30,15 @@ CREATE TABLE students
     student_name       VARCHAR(255) NOT NULL,
     student_surname    VARCHAR(255) NOT NULL,
     student_patronymic VARCHAR(255) NOT NULL,
-    specialty_id       INTEGER      NOT NULL,
-    CONSTRAINT specialty FOREIGN KEY (specialty_id) REFERENCES specialty (specialty_id) ON DELETE CASCADE,
+    speciality_id       INTEGER      NOT NULL,
+    CONSTRAINT speciality FOREIGN KEY (speciality_id) REFERENCES speciality (speciality_id) ON DELETE CASCADE,
     PRIMARY KEY (student_id)
 );
 
 INSERT INTO students (student_name,
                       student_surname,
                       student_patronymic,
-                      specialty_id)
+                      speciality_id)
 VALUES ('Сидоров', 'Иван', 'Петрович', 1);
 
 CREATE TABLE lecturers
@@ -91,12 +91,12 @@ CREATE TABLE lecturers_to_subjects
 INSERT INTO lecturers_to_subjects (lecturer_id, subject_id)
 VALUES ('1', '1');
 
-CREATE TABLE specialtys_to_subjects
+CREATE TABLE specialities_to_subjects
 (
-    specialty_id INTEGER NOT NULL,
+    speciality_id INTEGER NOT NULL,
     subject_id   INTEGER NOT NULL,
     semester     INTEGER NOT NULL,
-    CONSTRAINT specialty FOREIGN KEY (specialty_id) REFERENCES specialty (specialty_id) ON DELETE CASCADE,
+    CONSTRAINT speciality FOREIGN KEY (speciality_id) REFERENCES speciality (speciality_id) ON DELETE CASCADE,
     CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE CASCADE,
     CONSTRAINT semester CHECK (
             semester > 0
@@ -104,7 +104,7 @@ CREATE TABLE specialtys_to_subjects
         )
 );
 
-INSERT INTO specialtys_to_subjects (specialty_id, subject_id, semester)
+INSERT INTO specialities_to_subjects (speciality_id, subject_id, semester)
 VALUES ('1', '1', '1');
 
 CREATE TABLE record_book
