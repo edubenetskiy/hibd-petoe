@@ -1,77 +1,74 @@
 CREATE TABLE speciality
 (
-    speciality_id            SERIAL       NOT NULL,
-    speciality_code          CHAR(8)      NOT NULL,
-    speciality_name          VARCHAR(255) NOT NULL,
-    speciality_qualification VARCHAR(40)  NOT NULL,
-    standard                 CHAR(100)    NOT NULL,
-    form_of_study            CHAR(100)    NOT NULL,
-    place_of_study           VARCHAR(255) NOT NULL,
-    PRIMARY KEY (speciality_id),
-    CONSTRAINT speciality_code UNIQUE (speciality_code)
+    id            SERIAL       NOT NULL,
+    code          CHAR(8)      NOT NULL,
+    name          VARCHAR(255) NOT NULL,
+    qualification VARCHAR(40)  NOT NULL,
+    standard_type                 CHAR(100)    NOT NULL,
+    study_form            CHAR(100)    NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT speciality_code UNIQUE (code)
 );
 
-INSERT INTO speciality (speciality_code,
-                        speciality_name,
-                        speciality_qualification,
-                        standard,
-                        form_of_study,
-                        place_of_study)
+INSERT INTO speciality (code,
+                        name,
+                        qualification,
+                        standard_type,
+                        study_form)
 VALUES ('09.03.04',
         'Разработка программноинформационных систем',
         'Академический магистр',
         'новый',
-        'очная',
-        'ПИиКТ');
+        'очная');
 
 CREATE TABLE students
 (
-    student_id         SERIAL       NOT NULL,
-    student_name       VARCHAR(255) NOT NULL,
-    student_surname    VARCHAR(255) NOT NULL,
-    student_patronymic VARCHAR(255) NOT NULL,
+    id         SERIAL       NOT NULL,
+    name       VARCHAR(255) NOT NULL,
+    surname    VARCHAR(255) NOT NULL,
+    patronymic VARCHAR(255) NOT NULL,
     speciality_id      INTEGER      NOT NULL,
-    CONSTRAINT speciality FOREIGN KEY (speciality_id) REFERENCES speciality (speciality_id) ON DELETE CASCADE,
-    PRIMARY KEY (student_id)
+    CONSTRAINT speciality FOREIGN KEY (speciality_id) REFERENCES speciality (id) ON DELETE CASCADE,
+    PRIMARY KEY (id)
 );
 
-INSERT INTO students (student_name,
-                      student_surname,
-                      student_patronymic,
+INSERT INTO students (name,
+                      surname,
+                      patronymic,
                       speciality_id)
 VALUES ('Сидоров', 'Иван', 'Петрович', 1);
 
 CREATE TABLE lecturers
 (
-    lecturer_id         SERIAL       NOT NULL,
-    lecturer_name       VARCHAR(255) NOT NULL,
-    lecturer_surname    VARCHAR(255) NOT NULL,
-    lecturer_patronymic VARCHAR(255) NOT NULL,
-    PRIMARY KEY (lecturer_id)
+    id         SERIAL       NOT NULL,
+    name       VARCHAR(255) NOT NULL,
+    surname    VARCHAR(255) NOT NULL,
+    patronymic VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-INSERT INTO lecturers (lecturer_name,
-                       lecturer_surname,
-                       lecturer_patronymic)
+INSERT INTO lecturers (name,
+                       surname,
+                       patronymic)
 VALUES ('Смирнов', 'Павел', 'Сергеевич');
 
 CREATE TABLE subjects
 (
-    subject_id      SERIAL       NOT NULL,
-    subject_name    VARCHAR(255) NOT NULL,
-    subject_code    VARCHAR(20)  NOT NULL,
-    lectures        INTEGER      NOT NULL,
-    workshops       INTEGER      NOT NULL,
-    laboratories    INTEGER      NOT NULL,
+    id      SERIAL       NOT NULL,
+    name    VARCHAR(255) NOT NULL,
+    code    VARCHAR(20)  NOT NULL,
+    lecture_hours        INTEGER      NOT NULL,
+    workshop_hours       INTEGER      NOT NULL,
+    laboratory_hours    INTEGER      NOT NULL,
     form_of_control CHAR(100)    NOT NULL,
-    PRIMARY KEY (subject_id)
+    PRIMARY KEY (id)
 );
 
-INSERT INTO subjects (subject_name,
-                      subject_code,
-                      lectures,
-                      workshops,
-                      laboratories,
+INSERT INTO subjects (name,
+                      code,
+                      lecture_hours,
+                      workshop_hours,
+                      laboratory_hours,
                       form_of_control)
 VALUES ('Компьютерная графика',
         '2018449043-И',
@@ -84,8 +81,8 @@ CREATE TABLE lecturers_to_subjects
 (
     teacher_id INTEGER NOT NULL,
     subject_id  INTEGER NOT NULL,
-    CONSTRAINT lecturers FOREIGN KEY (teacher_id) REFERENCES lecturers (lecturer_id) ON DELETE CASCADE,
-    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE CASCADE
+    CONSTRAINT lecturers FOREIGN KEY (teacher_id) REFERENCES lecturers (id) ON DELETE CASCADE,
+    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (id) ON DELETE CASCADE
 );
 
 INSERT INTO lecturers_to_subjects (teacher_id, subject_id)
@@ -96,8 +93,8 @@ CREATE TABLE specialities_to_subjects
     speciality_id INTEGER NOT NULL,
     subject_id    INTEGER NOT NULL,
     semester      INTEGER NOT NULL,
-    CONSTRAINT speciality FOREIGN KEY (speciality_id) REFERENCES speciality (speciality_id) ON DELETE CASCADE,
-    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE CASCADE,
+    CONSTRAINT speciality FOREIGN KEY (speciality_id) REFERENCES speciality (id) ON DELETE CASCADE,
+    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (id) ON DELETE CASCADE,
     CONSTRAINT semester CHECK (
             semester > 0
             AND semester <= 10
@@ -114,11 +111,11 @@ CREATE TABLE record_book
     teacher_id         INTEGER NOT NULL,
     points             INTEGER NOT NULL,
     date_of_completion DATE    NOT NULL,
-    CONSTRAINT students FOREIGN KEY (student_id) REFERENCES students (student_id) ON DELETE CASCADE,
-    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE
+    CONSTRAINT students FOREIGN KEY (student_id) REFERENCES students (id) ON DELETE CASCADE,
+    CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (id) ON DELETE
         SET
         NULL,
-    CONSTRAINT lecturers FOREIGN KEY (teacher_id) REFERENCES lecturers (lecturer_id) ON DELETE
+    CONSTRAINT lecturers FOREIGN KEY (teacher_id) REFERENCES lecturers (id) ON DELETE
         SET
         NULL,
     CONSTRAINT points CHECK (
