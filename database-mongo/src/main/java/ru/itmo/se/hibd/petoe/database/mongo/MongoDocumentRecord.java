@@ -4,8 +4,9 @@ import org.bson.Document;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 
-import java.util.Collections;
+import java.util.AbstractMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MongoDocumentRecord implements Record {
 
@@ -40,6 +41,13 @@ public class MongoDocumentRecord implements Record {
 
     @Override
     public Map<String, Object> getColumnValues() {
-        return Collections.unmodifiableMap(document);
+        return document.entrySet().stream()
+                .map(entry -> {
+                    if (entry.getKey().equals("_id")) {
+                        return new AbstractMap.SimpleEntry<>("id", entry.getValue());
+                    }
+                    return entry;
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
