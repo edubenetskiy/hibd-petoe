@@ -3,7 +3,12 @@ package ru.itmo.se.hibd.lab1.importer.app;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.jdbi.v3.core.Jdbi;
+import ru.itmo.se.hibd.lab1.importer.app.schema.CSVFileSchemaMetadata;
+import ru.itmo.se.hibd.lab1.importer.app.schema.ColumnMetadata;
+import ru.itmo.se.hibd.lab1.importer.app.schema.SchemaMetadata;
+import ru.itmo.se.hibd.lab1.importer.app.schema.TableMetadata;
 import ru.itmo.se.hibd.lab1.importer.core.ClusterizableTable;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Storage;
@@ -18,12 +23,18 @@ import ru.itmo.se.hibd.petoe.database.postgresql.PostgresqlStorage;
 import ru.itmo.se.hibd.petoe.inmemorystorage.InMemoryWritableStorage;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Main {
-    public static void main(String[] args) {
+
+    public static final SchemaMetadata SCHEMA_METADATA =
+            new CSVFileSchemaMetadata(Main.class.getResource("/column-names/oracle-final.csv"));
+
+    public static void main(String[] args) throws Exception {
         // Подключиться ко всех исходным БД
         Collection<Storage> sourceStorages = connectToSourceDatabases();
         // Подключиться к временной БД
@@ -45,6 +56,8 @@ public class Main {
             }
         }
 
+        validateSchema(temporaryStorage);
+
         // ШАГ 2: Объединение и импорт
         // Подключиться к целевой БД
         TargetDatabase targetDatabase = connectToTargetDatabase();
@@ -57,8 +70,11 @@ public class Main {
             recordsById.forEach((Object id, Collection<Record> recordsWithSameId) -> {
                 // Объединить строки с одинаковым ИД в одну запись
                 Record mergedRecord = mergeRecords(recordsWithSameId);
+                // Убрать лишние колонки из строки (возможна потеря данных!)
+                Record distilledRecord = distillRecord(mergedRecord);
                 // Сохранить объединённую запись в целевое хранилище
-                targetDatabase.writeRecord(mergedRecord);
+                log.info("Writing record to target storage: {}", distilledRecord);
+                targetDatabase.writeRecord(distilledRecord);
             });
         }
     }
@@ -66,6 +82,50 @@ public class Main {
     private static void validateRecord(Record record) {
         // TODO: добавить проверку и бросить исключение, если строка содержит колонки, отсутствующие в целевой БД
         // если недостающих колонок нет, не предпринимать никаких действий
+    }
+
+    private static void validateSchema(WritableStorage temporaryStorage) {
+        for (TableMetadata tableMetadata : SCHEMA_METADATA.allTables()) {
+            String tableName = tableMetadata.name();
+            if (!temporaryStorage.hasTable(tableName)) {
+                log.warn("Temporary storage has no table {}", tableName);
+                continue;
+            }
+            validateTable(temporaryStorage.getTableByName(tableName));
+        }
+    }
+
+    private static void validateTable(ClusterizableTable table) {
+        String tableName = table.getName();
+        List<String> sourceColumnNames = table.groupRecordsById().values().stream()
+                .flatMap(Collection::stream)
+                .flatMap(record -> record.getColumnValues().keySet().stream())
+                .distinct()
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList());
+        Collection<String> targetColumnNames = SCHEMA_METADATA.findTableByName(tableName).columns().stream()
+                .map(ColumnMetadata::name)
+                .sorted()
+                .collect(Collectors.toList());
+        log.info("TABLE '{}'", tableName);
+        log.info("    Columns in source databases: {}", sourceColumnNames);
+        log.info("    Columns in target database:  {}", targetColumnNames);
+        Collection<String> unknownColumnNames = CollectionUtils.subtract(sourceColumnNames, targetColumnNames);
+        Collection<String> unmappedColumnNames = CollectionUtils.subtract(targetColumnNames, sourceColumnNames);
+        if (!unknownColumnNames.isEmpty()) {
+            log.warn("!!! UNKNOWN COLUMNS: Target table '{}' does not have columns from source tables: {}", tableName, unknownColumnNames);
+        }
+        if (!unmappedColumnNames.isEmpty()) {
+            log.warn("!!! UNMAPPED COLUMNS: Source tables '{}' do not have columns from target table: {}", tableName, unmappedColumnNames);
+        }
+    }
+
+    private static Record distillRecord(Record record) {
+        Collection<String> columnsInTargetTable = SCHEMA_METADATA.findTableByName(record.getTableName())
+                .columns().stream()
+                .map(ColumnMetadata::name)
+                .collect(Collectors.toList());
+        return new DistilledRecord(record, columnsInTargetTable);
     }
 
     private static TargetDatabase connectToTargetDatabase() {

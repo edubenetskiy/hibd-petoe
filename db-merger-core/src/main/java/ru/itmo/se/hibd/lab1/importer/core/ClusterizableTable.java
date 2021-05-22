@@ -5,5 +5,7 @@ import java.util.Map;
 
 public interface ClusterizableTable {
 
+    String getName();
+
     Map<Object, Collection<Record>> groupRecordsById();
 }

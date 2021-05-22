@@ -19,6 +19,16 @@ public class InMemoryWritableStorage implements WritableStorage {
     }
 
     @Override
+    public ClusterizableTable getTableByName(String name) {
+        return tableByName.get(name);
+    }
+
+    @Override
+    public boolean hasTable(String name) {
+        return tableByName.containsKey(name);
+    }
+
+    @Override
     public void writeRecord(Record record) {
         String tableName = record.getTableName();
         InMemoryTable inMemoryTable = tableByName.computeIfAbsent(tableName, InMemoryTable::new);

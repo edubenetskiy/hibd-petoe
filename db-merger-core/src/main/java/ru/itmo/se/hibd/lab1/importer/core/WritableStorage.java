@@ -6,5 +6,9 @@ public interface WritableStorage {
 
     Collection<ClusterizableTable> getTables();
 
+    ClusterizableTable getTableByName(String name);
+
+    boolean hasTable(String name);
+
     void writeRecord(Record record);
 }
