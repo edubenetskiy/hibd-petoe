@@ -1,0 +1,11 @@
+= hibd-petoe
+
+A tool for merging data from multiple databases to one storage.
+
+Made as an assignment for the https://en.itmo.ru/[ITMO University] “Storages and Databases” course.
+
+== Project name
+
+“HiBD” is a transliteration of the Russian abbreviation “ХиБД” (“Хранилища и базы данных” -- “Storages and databases”). 
+
+“PETOE” comes from the first letters of authors' names: Petr, Ekaterina, Tatiana, Olesia, Egor (in order of joining the related Internet chat room).
