@@ -8,61 +8,61 @@ db.students.insert([
     {
         _id: 111111,
         name: "Петров Петр Петрович",
-        is_previleged: false,
+        is_privileged: false,
         form_of_study: "FREE",
     },
     {
         _id: 222222,
         name: "Иванов Аркадий Петрович",
-        is_previleged: false,
+        is_privileged: false,
         form_of_study: "SELF-FUNDED",
     },
     {
         _id: 333333,
         name: "Арефьев Петр Васильевич",
-        is_previleged: false,
+        is_privileged: false,
         form_of_study: "FREE",
     },
     {
         _id: 444444,
         name: "Кириленко Василий Викторович",
-        is_previleged: true,
+        is_privileged: true,
         form_of_study: "SELF-FUNDED",
     },
     {
         _id: 555555,
         name: "Абрамов Петр Петрович",
-        is_previleged: false,
+        is_privileged: false,
         form_of_study: "FREE",
     },
     {
         _id: 666666,
         name: "Абрамович Иван Игоревич",
-        is_previleged: false,
+        is_privileged: false,
         form_of_study: "FREE",
     },
     {
         _id: 777777,
         name: "Иванов Петр Дмитриевич",
-        is_previleged: false,
+        is_privileged: false,
         form_of_study: "FREE",
     },
     {
         _id: 888888,
         name: "Германов Петр Дмитриевич",
-        is_previleged: false,
+        is_privileged: false,
         form_of_study: "FREE",
     },
     {
         _id: 999999,
         name: "Ананьев Петр Александрович",
-        is_previleged: true,
+        is_privileged: true,
         form_of_study: "FREE",
     },
     {
         _id: 100000,
         name: "Богданов Ильфат Петрович",
-        is_previleged: false,
+        is_privileged: false,
         form_of_study: "FREE",
     },
 ]);
@@ -126,8 +126,8 @@ db.room_types.insert([
 db.rooms.insert([
     {
         _id: 101,
-        id_dorm: 1,
-        id_room_type: 1,
+        dorm_id: 1,
+        room_type_id: 1,
         number_of_occupied_places: 2,
         does_have_bugs: false,
         date_of_last_disinfection: {
@@ -136,8 +136,8 @@ db.rooms.insert([
     },
     {
         _id: 102,
-        id_dorm: 1,
-        id_room_type: 2,
+        dorm_id: 1,
+        room_type_id: 2,
         number_of_occupied_places: 2,
         does_have_bugs: false,
         date_of_last_disinfection: {
@@ -146,8 +146,8 @@ db.rooms.insert([
     },
     {
         _id: 103,
-        id_dorm: 1,
-        id_room_type: 3,
+        dorm_id: 1,
+        room_type_id: 3,
         number_of_occupied_places: 1,
         does_have_bugs: true,
         date_of_last_disinfection: {
@@ -156,8 +156,8 @@ db.rooms.insert([
     },
     {
         _id: 1103,
-        id_dorm: 2,
-        id_room_type: 4,
+        dorm_id: 2,
+        room_type_id: 4,
         number_of_occupied_places: 2,
         does_have_bugs: false,
         date_of_last_disinfection: {
@@ -166,8 +166,8 @@ db.rooms.insert([
     },
     {
         _id: 1104,
-        id_dorm: 2,
-        id_room_type: 5,
+        dorm_id: 2,
+        room_type_id: 5,
         number_of_occupied_places: 1,
         does_have_bugs: false,
         date_of_last_disinfection: {
@@ -176,8 +176,8 @@ db.rooms.insert([
     },
     {
         _id: 143,
-        id_dorm: 3,
-        id_room_type: 6,
+        dorm_id: 3,
+        room_type_id: 6,
         number_of_occupied_places: 2,
         does_have_bugs: true,
         date_of_last_disinfection: {
@@ -186,8 +186,8 @@ db.rooms.insert([
     },
     {
         _id: 142,
-        id_dorm: 3,
-        id_room_type: 1,
+        dorm_id: 3,
+        room_type_id: 1,
         number_of_occupied_places: 1,
         does_have_bugs: false,
         date_of_last_disinfection: {
@@ -196,8 +196,8 @@ db.rooms.insert([
     },
     {
         _id: 1990,
-        id_dorm: 4,
-        id_room_type: 2,
+        dorm_id: 4,
+        room_type_id: 2,
         number_of_occupied_places: 2,
         does_have_bugs: true,
         date_of_last_disinfection: {
@@ -206,8 +206,8 @@ db.rooms.insert([
     },
     {
         _id: 1991,
-        id_dorm: 4,
-        id_room_type: 3,
+        dorm_id: 4,
+        room_type_id: 3,
         number_of_occupied_places: 2,
         does_have_bugs: false,
         date_of_last_disinfection: {
@@ -216,8 +216,8 @@ db.rooms.insert([
     },
     {
         _id: 405,
-        id_dorm: 4,
-        id_room_type: 4,
+        dorm_id: 4,
+        room_type_id: 4,
         number_of_occupied_places: 2,
         does_have_bugs: false,
         date_of_last_disinfection: {
@@ -228,8 +228,8 @@ db.rooms.insert([
 
 db.student_dorm_info.insert([
     {
-        id_student: 111111,
-        id_room: 101,
+        student_id: 111111,
+        room_id: 101,
         date_of_entry: {
             $date: "2016-09-01T16:54:40Z",
         },
@@ -248,8 +248,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 222222,
-        id_room: 102,
+        student_id: 222222,
+        room_id: 102,
         date_of_entry: {
             $date: "2016-09-01T16:54:40Z",
         },
@@ -268,8 +268,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 333333,
-        id_room: 103,
+        student_id: 333333,
+        room_id: 103,
         date_of_entry: {
             $date: "2017-09-01T16:54:40Z",
         },
@@ -288,8 +288,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 444444,
-        id_room: 1103,
+        student_id: 444444,
+        room_id: 1103,
         date_of_entry: {
             $date: "2020-09-01T16:54:40Z",
         },
@@ -308,8 +308,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 555555,
-        id_room: 1104,
+        student_id: 555555,
+        room_id: 1104,
         date_of_entry: {
             $date: "2019-09-01T16:54:40Z",
         },
@@ -328,8 +328,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 666666,
-        id_room: 143,
+        student_id: 666666,
+        room_id: 143,
         date_of_entry: {
             $date: "2020-10-11T16:54:40Z",
         },
@@ -348,8 +348,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 777777,
-        id_room: 142,
+        student_id: 777777,
+        room_id: 142,
         date_of_entry: {
             $date: "2020-09-01T16:54:40Z",
         },
@@ -368,8 +368,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 888888,
-        id_room: 1990,
+        student_id: 888888,
+        room_id: 1990,
         date_of_entry: {
             $date: "2020-09-01T16:54:40Z",
         },
@@ -388,8 +388,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 999999,
-        id_room: 1991,
+        student_id: 999999,
+        room_id: 1991,
         date_of_entry: {
             $date: "2018-09-01T16:54:40Z",
         },
@@ -408,8 +408,8 @@ db.student_dorm_info.insert([
         },
     },
     {
-        id_student: 100000,
-        id_room: 405,
+        student_id: 100000,
+        room_id: 405,
         date_of_entry: {
             $date: "2020-09-01T16:54:40Z",
         },
