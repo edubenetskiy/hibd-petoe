@@ -107,16 +107,17 @@ public class Main {
                 .map(ColumnMetadata::name)
                 .sorted()
                 .collect(Collectors.toList());
-        log.info("TABLE '{}'", tableName);
-        log.info("    Columns in source databases: {}", sourceColumnNames);
-        log.info("    Columns in target database:  {}", targetColumnNames);
+        log.info("Table '{}': Columns in source databases: {}", tableName, sourceColumnNames);
+        log.info("Table '{}': Columns in target database:  {}", tableName, targetColumnNames);
         Collection<String> unknownColumnNames = CollectionUtils.subtract(sourceColumnNames, targetColumnNames);
         Collection<String> unmappedColumnNames = CollectionUtils.subtract(targetColumnNames, sourceColumnNames);
         if (!unknownColumnNames.isEmpty()) {
-            log.warn("!!! UNKNOWN COLUMNS: Target table '{}' does not have columns from source tables: {}", tableName, unknownColumnNames);
+            log.warn("Unknown columns in source tables '{}': Columns present in source DBs, but missing from target DB: {}",
+                    tableName, unknownColumnNames);
         }
         if (!unmappedColumnNames.isEmpty()) {
-            log.warn("!!! UNMAPPED COLUMNS: Source tables '{}' do not have columns from target table: {}", tableName, unmappedColumnNames);
+            log.warn("Unmapped columns in target table '{}': Columns missing from source DBs, but must be in target DB: {}",
+                    tableName, unmappedColumnNames);
         }
     }
 
