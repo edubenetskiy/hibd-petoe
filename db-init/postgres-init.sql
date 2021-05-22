@@ -4,19 +4,19 @@ CREATE TABLE speciality
     speciality_code          CHAR(8)      NOT NULL,
     speciality_name          VARCHAR(255) NOT NULL,
     speciality_qualification VARCHAR(40)  NOT NULL,
-    standard                CHAR(100)    NOT NULL,
-    form_of_study           CHAR(100)    NOT NULL,
-    place_of_study          VARCHAR(255) NOT NULL,
+    standard                 CHAR(100)    NOT NULL,
+    form_of_study            CHAR(100)    NOT NULL,
+    place_of_study           VARCHAR(255) NOT NULL,
     PRIMARY KEY (speciality_id),
     CONSTRAINT speciality_code UNIQUE (speciality_code)
 );
 
 INSERT INTO speciality (speciality_code,
-                       speciality_name,
-                       speciality_qualification,
-                       standard,
-                       form_of_study,
-                       place_of_study)
+                        speciality_name,
+                        speciality_qualification,
+                        standard,
+                        form_of_study,
+                        place_of_study)
 VALUES ('09.03.04',
         'Разработка программноинформационных систем',
         'Академический магистр',
@@ -30,7 +30,7 @@ CREATE TABLE students
     student_name       VARCHAR(255) NOT NULL,
     student_surname    VARCHAR(255) NOT NULL,
     student_patronymic VARCHAR(255) NOT NULL,
-    speciality_id       INTEGER      NOT NULL,
+    speciality_id      INTEGER      NOT NULL,
     CONSTRAINT speciality FOREIGN KEY (speciality_id) REFERENCES speciality (speciality_id) ON DELETE CASCADE,
     PRIMARY KEY (student_id)
 );
@@ -82,20 +82,20 @@ VALUES ('Компьютерная графика',
 
 CREATE TABLE lecturers_to_subjects
 (
-    lecturer_id INTEGER NOT NULL,
+    teacher_id INTEGER NOT NULL,
     subject_id  INTEGER NOT NULL,
-    CONSTRAINT lecturers FOREIGN KEY (lecturer_id) REFERENCES lecturers (lecturer_id) ON DELETE CASCADE,
+    CONSTRAINT lecturers FOREIGN KEY (teacher_id) REFERENCES lecturers (lecturer_id) ON DELETE CASCADE,
     CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE CASCADE
 );
 
-INSERT INTO lecturers_to_subjects (lecturer_id, subject_id)
+INSERT INTO lecturers_to_subjects (teacher_id, subject_id)
 VALUES ('1', '1');
 
 CREATE TABLE specialities_to_subjects
 (
     speciality_id INTEGER NOT NULL,
-    subject_id   INTEGER NOT NULL,
-    semester     INTEGER NOT NULL,
+    subject_id    INTEGER NOT NULL,
+    semester      INTEGER NOT NULL,
     CONSTRAINT speciality FOREIGN KEY (speciality_id) REFERENCES speciality (speciality_id) ON DELETE CASCADE,
     CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE CASCADE,
     CONSTRAINT semester CHECK (
@@ -109,16 +109,16 @@ VALUES ('1', '1', '1');
 
 CREATE TABLE record_book
 (
-    student_id  INTEGER NOT NULL,
-    subject_id  INTEGER NOT NULL,
-    lecturer_id INTEGER NOT NULL,
-    points      INTEGER NOT NULL,
-    date        DATE    NOT NULL,
+    student_id         INTEGER NOT NULL,
+    subject_id         INTEGER NOT NULL,
+    teacher_id         INTEGER NOT NULL,
+    points             INTEGER NOT NULL,
+    date_of_completion DATE    NOT NULL,
     CONSTRAINT students FOREIGN KEY (student_id) REFERENCES students (student_id) ON DELETE CASCADE,
     CONSTRAINT subjects FOREIGN KEY (subject_id) REFERENCES subjects (subject_id) ON DELETE
         SET
         NULL,
-    CONSTRAINT lecturers FOREIGN KEY (lecturer_id) REFERENCES lecturers (lecturer_id) ON DELETE
+    CONSTRAINT lecturers FOREIGN KEY (teacher_id) REFERENCES lecturers (lecturer_id) ON DELETE
         SET
         NULL,
     CONSTRAINT points CHECK (
@@ -129,9 +129,9 @@ CREATE TABLE record_book
 
 INSERT INTO record_book (student_id,
                          subject_id,
-                         lecturer_id,
+                         teacher_id,
                          points,
-                         date)
+                         date_of_completion)
 VALUES ('1',
         '1',
         '1',

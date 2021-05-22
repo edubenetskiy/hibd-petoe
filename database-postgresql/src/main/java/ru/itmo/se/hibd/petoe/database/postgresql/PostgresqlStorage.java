@@ -41,7 +41,7 @@ public class PostgresqlStorage implements Storage {
                 getPostgresqlTable()
                         .internalTableName("lecturers_to_subjects")
                         .targetTableName("teacher_subject")
-                        .idExtractor(MapRecordKeyExtractor.withColumns("lecturer_id", "subject_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumns("teacher_id", "subject_id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("specialities_to_subjects")
