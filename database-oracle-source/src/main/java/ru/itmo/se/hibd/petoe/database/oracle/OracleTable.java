@@ -33,7 +33,7 @@ public class OracleTable implements Table {
                 handle.select("select * from " + internalTableName)
                         .mapToMap()
                         .map(columnValues -> {
-                            Object id = idExtractor.extractKey(columnValues); // TODO: extract ID by columns
+                            Object id = idExtractor.extractKey(columnValues);
                             return new OracleRowRecord(OracleTable.this, id, columnValues);
                         })
                         .collect(toList()));

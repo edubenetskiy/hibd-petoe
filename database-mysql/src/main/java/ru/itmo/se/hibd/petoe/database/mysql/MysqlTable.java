@@ -33,7 +33,7 @@ public class MysqlTable implements Table {
                 handle.select("select * from " + internalTableName)
                         .mapToMap()
                         .map(columnValues -> {
-                            Object id = idExtractor.extractKey(columnValues); // TODO: extract ID by columns
+                            Object id = idExtractor.extractKey(columnValues);
                             return new MysqlRowRecord(MysqlTable.this, id, columnValues);
                         })
                         .collect(toList()));

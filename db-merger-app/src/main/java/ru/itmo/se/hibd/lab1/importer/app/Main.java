@@ -130,7 +130,6 @@ public class Main {
     }
 
     private static TargetDatabase connectToTargetDatabase() {
-        // TODO: Подключиться к целевой схеме Oracle и создать экземпляр TargetDatabase
         Jdbi jdbi = Jdbi.create("jdbc:oracle:thin:@localhost:1521:XE", "hibd", "hibd");
         return new OracleTargetDatabase(jdbi);
     }
@@ -149,15 +148,10 @@ public class Main {
     }
 
     private static Collection<Storage> connectToSourceDatabases() {
-        // TODO: Подключиться к БД Mongo и создать экземпляр SourceDatabase для этой БД
         Storage mongoStorage = connectToMongoDatabase();
-        // TODO: Подключиться к БД MySQL и создать экземпляр SourceDatabase для этой БД
         Storage mysqlStorage = connectToMysqlStorage();
-        // TODO: Подключиться к БД Oracle и создать экземпляр SourceDatabase для этой БД
         Storage oracleStorage = connectToOracleStorage();
-        // TODO: Подключиться к БД PostgreSQL и создать экземпляр SourceDatabase для этой БД
         Storage postgresqlStorage = connectToPostgresqlStorage();
-        // TODO: Вернуть коллекцию подключений ко всем БД
         return List.of(mongoStorage, mysqlStorage, oracleStorage, postgresqlStorage);
     }
 
