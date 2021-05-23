@@ -2,6 +2,7 @@ package ru.itmo.se.hibd.petoe.database.postgresql;
 
 import lombok.NonNull;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
+import ru.itmo.se.hibd.lab1.importer.core.StorageType;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 
 import java.util.Collections;
@@ -32,6 +33,10 @@ public class PostgresqlRowRecord implements Record {
     @Override
     public Map<String, Object> getColumnValues() {
         return Collections.unmodifiableMap(columnValues);
+    }
+
+    @Override public StorageType getStorageType() {
+        return StorageType.POSTGRESQL;
     }
 
     @Override

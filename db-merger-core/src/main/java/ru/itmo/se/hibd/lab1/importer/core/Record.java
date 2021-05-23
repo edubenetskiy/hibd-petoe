@@ -13,4 +13,6 @@ public interface Record {
     Object getId();
 
     Map<String, Object> getColumnValues();
+
+    StorageType getStorageType();
 }

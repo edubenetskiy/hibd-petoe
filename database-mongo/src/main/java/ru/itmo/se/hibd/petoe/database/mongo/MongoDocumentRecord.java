@@ -3,6 +3,7 @@ package ru.itmo.se.hibd.petoe.database.mongo;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
+import ru.itmo.se.hibd.lab1.importer.core.StorageType;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 
 import java.time.OffsetDateTime;
@@ -47,6 +48,10 @@ public class MongoDocumentRecord implements Record {
     @Override
     public Map<String, Object> getColumnValues() {
         return columnValues;
+    }
+
+    @Override public StorageType getStorageType() {
+        return StorageType.MONGODB;
     }
 
     private Map.Entry<String, Object> fixEntryValueTypes(Map.Entry<String, Object> entry) {
