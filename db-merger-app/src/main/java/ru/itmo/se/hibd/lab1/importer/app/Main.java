@@ -3,15 +3,20 @@ package ru.itmo.se.hibd.lab1.importer.app;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jdbi.v3.core.Jdbi;
 import ru.itmo.se.hibd.lab1.importer.app.schema.CSVFileSchemaMetadata;
 import ru.itmo.se.hibd.lab1.importer.app.schema.ColumnMetadata;
 import ru.itmo.se.hibd.lab1.importer.app.schema.SchemaMetadata;
 import ru.itmo.se.hibd.lab1.importer.app.schema.TableMetadata;
+import ru.itmo.se.hibd.lab1.importer.core.Cell;
 import ru.itmo.se.hibd.lab1.importer.core.ClusterizableTable;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
+import ru.itmo.se.hibd.lab1.importer.core.SimpleRecord;
 import ru.itmo.se.hibd.lab1.importer.core.Storage;
+import ru.itmo.se.hibd.lab1.importer.core.StorageType;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
 import ru.itmo.se.hibd.lab1.importer.core.TargetDatabase;
 import ru.itmo.se.hibd.lab1.importer.core.WritableStorage;
@@ -27,6 +32,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.groupingBy;
 
 @Slf4j
 public class Main {
@@ -125,11 +133,16 @@ public class Main {
     }
 
     private static Record distillRecord(Record record) {
-        Collection<String> columnsInTargetTable = SCHEMA_METADATA.findTableByName(record.getTableName())
+        Collection<String> targetTableColumns = SCHEMA_METADATA.findTableByName(record.getTableName())
                 .columns().stream()
                 .map(ColumnMetadata::name)
                 .collect(Collectors.toList());
-        return new DistilledRecord(record, columnsInTargetTable);
+
+        Map<String, Object> valuesForTargetTableColumns = EntryStream.of(record.getColumnValues())
+                .filterKeys(targetTableColumns::contains)
+                .toMap();
+
+        return SimpleRecord.copyOf(record).withColumnValues(valuesForTargetTableColumns);
     }
 
     private static TargetDatabase connectToTargetDatabase() {
