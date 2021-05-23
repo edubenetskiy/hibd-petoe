@@ -142,7 +142,11 @@ public class Main {
         if (records.size() == 1) {
             return records.iterator().next();
         }
-        throw new IllegalStateException("don't know how to merge records");
+        throw new IllegalStateException(
+                "don't know how to merge " + records.size() + " records:\n" +
+                records.stream()
+                        .map(record -> "    - " + record.toString())
+                        .collect(Collectors.joining("\n")));
     }
 
     private static WritableStorage connectToTemporaryStorage() {
