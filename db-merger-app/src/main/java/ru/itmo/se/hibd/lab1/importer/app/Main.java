@@ -77,6 +77,8 @@ public class Main {
                 targetDatabase.writeRecord(distilledRecord);
             });
         }
+
+        log.info("Program complete");
     }
 
     private static void validateRecord(Record record) {
