@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.NonNull;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
+import ru.itmo.se.hibd.petoe.recordkeyextractor.MapRecordKeyExtractor;
 
 import static java.util.stream.Collectors.toList;
 

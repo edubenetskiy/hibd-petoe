@@ -30,6 +30,10 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.20</version>
         </dependency>
+        <dependency>
+            <groupId>ru.itmo.se.hibd.petoe</groupId>
+            <artifactId>record-key-extractor</artifactId>
+        </dependency>
 
     </dependencies>
 

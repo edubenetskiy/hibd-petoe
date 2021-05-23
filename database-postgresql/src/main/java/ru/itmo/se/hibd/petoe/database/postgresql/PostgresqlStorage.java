@@ -3,6 +3,7 @@ package ru.itmo.se.hibd.petoe.database.postgresql;
 import org.jdbi.v3.core.Jdbi;
 import ru.itmo.se.hibd.lab1.importer.core.Storage;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
+import ru.itmo.se.hibd.petoe.recordkeyextractor.MapRecordKeyExtractor;
 
 import java.util.Collection;
 import java.util.List;

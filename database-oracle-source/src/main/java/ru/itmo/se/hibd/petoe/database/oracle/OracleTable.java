@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import oracle.sql.TIMESTAMP;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
+import ru.itmo.se.hibd.petoe.recordkeyextractor.MapRecordKeyExtractor;
 
 import java.util.Map;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package ru.itmo.se.hibd.petoe.database.mysql;
+package ru.itmo.se.hibd.petoe.recordkeyextractor;
 
 import org.apache.commons.collections4.CollectionUtils;
 
