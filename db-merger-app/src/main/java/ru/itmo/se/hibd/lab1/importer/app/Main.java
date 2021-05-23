@@ -60,22 +60,23 @@ public class Main {
 
         // ШАГ 2: Объединение и импорт
         // Подключиться к целевой БД
-        TargetDatabase targetDatabase = connectToTargetDatabase();
-        // Для каждой таблицы во временной БД
-        for (ClusterizableTable table : temporaryStorage.getTables()) {
-            // Сгруппировать записи в таблице по ИД
-            Map<Object, Collection<Record>> recordsById = table.groupRecordsById();
-            // Для каждого уникального ИД в таблице временной БД,
-            // найти все строки (и признаки хранилища) с этим ИД
-            recordsById.forEach((Object id, Collection<Record> recordsWithSameId) -> {
-                // Объединить строки с одинаковым ИД в одну запись
-                Record mergedRecord = mergeRecords(recordsWithSameId);
-                // Убрать лишние колонки из строки (возможна потеря данных!)
-                Record distilledRecord = distillRecord(mergedRecord);
-                // Сохранить объединённую запись в целевое хранилище
-                log.info("Writing record to target storage: {}", distilledRecord);
-                targetDatabase.writeRecord(distilledRecord);
-            });
+        try (TargetDatabase targetDatabase = connectToTargetDatabase()) {
+            // Для каждой таблицы во временной БД
+            for (ClusterizableTable table : temporaryStorage.getTables()) {
+                // Сгруппировать записи в таблице по ИД
+                Map<Object, Collection<Record>> recordsById = table.groupRecordsById();
+                // Для каждого уникального ИД в таблице временной БД,
+                // найти все строки (и признаки хранилища) с этим ИД
+                recordsById.forEach((Object id, Collection<Record> recordsWithSameId) -> {
+                    // Объединить строки с одинаковым ИД в одну запись
+                    Record mergedRecord = mergeRecords(recordsWithSameId);
+                    // Убрать лишние колонки из строки (возможна потеря данных!)
+                    Record distilledRecord = distillRecord(mergedRecord);
+                    // Сохранить объединённую запись в целевое хранилище
+                    log.info("Writing record to target storage: {}", distilledRecord);
+                    targetDatabase.writeRecord(distilledRecord);
+                });
+            }
         }
 
         log.info("Program complete");

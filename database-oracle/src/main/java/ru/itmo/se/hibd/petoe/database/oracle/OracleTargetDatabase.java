@@ -39,6 +39,7 @@ public class OracleTargetDatabase implements TargetDatabase, AutoCloseable {
 
     @Override
     public void close() throws Exception {
+        handle.commit(); // FIXME: better commit manually, large transactions may timeout
         handle.close();
     }
 }
