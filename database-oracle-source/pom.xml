@@ -23,6 +23,11 @@
             <groupId>ru.itmo.se.hibd.petoe</groupId>
             <artifactId>hibd-petoe-db-merger-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc10</artifactId>
+        </dependency>
     </dependencies>
 
 

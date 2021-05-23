@@ -2,8 +2,13 @@ package ru.itmo.se.hibd.petoe.database.oracle;
 
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.SneakyThrows;
+import oracle.sql.TIMESTAMP;
 import ru.itmo.se.hibd.lab1.importer.core.Record;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -33,10 +38,22 @@ public class OracleTable implements Table {
                 handle.select("select * from " + internalTableName)
                         .mapToMap()
                         .map(columnValues -> {
-                            Object id = idExtractor.extractKey(columnValues);
-                            return new OracleRowRecord(OracleTable.this, id, columnValues);
+                            Map<String, Object> fixedColumnValues = columnValues.entrySet().stream()
+                                    .map(this::fixEntryValueTypes)
+                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                            Object id = idExtractor.extractKey(fixedColumnValues);
+                            return new OracleRowRecord(OracleTable.this, id, fixedColumnValues);
                         })
                         .collect(toList()));
+    }
+
+    @SneakyThrows
+    private Map.Entry<String, Object> fixEntryValueTypes(Map.Entry<String, Object> entry) {
+        Object value = entry.getValue();
+        if (value instanceof TIMESTAMP) {
+            value = ((TIMESTAMP) value).timestampValue();
+        }
+        return Map.entry(entry.getKey(), value);
     }
 
 }
