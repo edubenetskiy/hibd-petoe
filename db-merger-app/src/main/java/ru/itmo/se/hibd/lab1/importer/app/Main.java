@@ -150,17 +150,40 @@ public class Main {
         return new OracleTargetDatabase(jdbi);
     }
 
+    // Объединить данные для одной и той же строки из разных БД в одну строку для целевой БД.
     private static Record mergeRecords(Collection<Record> records) {
-        // Объединить данные для одной и той же строки из разных БД в одну строку для целевой БД.
-        // TODO: Для каждой колонки выбрать не-NULL значения, из них - значение из БД с наибольшим приоритетом.
         if (records.size() == 1) {
             return records.iterator().next();
         }
-        throw new IllegalStateException(
-                "don't know how to merge " + records.size() + " records:\n" +
+
+        // Сгруппировать значения разных колонок из разных БД
+        Map<String, List<Cell>> candidatesByColumnNames =
                 records.stream()
-                        .map(record -> "    - " + record.toString())
-                        .collect(Collectors.joining("\n")));
+                        .flatMap(record -> record.getColumnValues().entrySet().stream()
+                                .map(entry -> new Cell(record.getStorageType(), entry.getKey(), entry.getValue())))
+                        .collect(groupingBy(Cell::columnName));
+
+        // Для каждой колонки выбрать не-NULL значение из БД с наибольшим приоритетом
+        Map<String, Object> mergedColumnValues = EntryStream.of(candidatesByColumnNames)
+                .mapValues(candidates -> {
+                    Comparator<Cell> byStorageRank = comparing(cell -> cell.storageType().rank());
+                    Cell bestCandidateCell = candidates.stream()
+                            .filter(cell -> cell.value() != null)
+                            .max(byStorageRank)
+                            .orElseThrow();
+                    return bestCandidateCell.value();
+                })
+                .toMap();
+
+        Record anyRecord = StreamEx.of(records).findAny().orElseThrow();
+
+        return SimpleRecord.builder()
+                .table(anyRecord.getTable())
+                .tableName(anyRecord.getTableName())
+                .id(anyRecord.getId())
+                .columnValues(mergedColumnValues)
+                .storageType(StorageType.ORACLE_FINAL)
+                .build();
     }
 
     private static WritableStorage connectToTemporaryStorage() {
