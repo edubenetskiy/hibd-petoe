@@ -26,7 +26,7 @@ public class MysqlStorage implements Storage {
                 mysqlTable()
                         .internalTableName("conferences")
                         .targetTableName("conference")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("conference_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("conferences_participants")
@@ -51,12 +51,12 @@ public class MysqlStorage implements Storage {
                 mysqlTable()
                         .internalTableName("projects")
                         .targetTableName("project")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("project_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("publications")
                         .targetTableName("publication")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("publication_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
                         .build()
         );
     }

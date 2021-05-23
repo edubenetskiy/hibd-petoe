@@ -38,4 +38,13 @@ public class MysqlTable implements Table {
                         })
                         .collect(toList()));
     }
+
+    @Override public String toString() {
+        return "MysqlTable{" +
+               "storage=" + storage +
+               ", internalTableName='" + internalTableName + '\'' +
+               ", idExtractor=" + idExtractor +
+               ", targetTableName='" + targetTableName + '\'' +
+               '}';
+    }
 }
