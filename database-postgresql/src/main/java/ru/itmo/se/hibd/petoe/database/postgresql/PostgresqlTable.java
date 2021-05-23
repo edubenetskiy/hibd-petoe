@@ -40,4 +40,12 @@ public class PostgresqlTable implements Table {
                         .collect(toList()));
     }
 
+    @Override public String toString() {
+        return "PostgresqlTable{" +
+               "storage=" + storage +
+               ", internalTableName='" + internalTableName + '\'' +
+               ", idExtractor=" + idExtractor +
+               ", targetTableName='" + targetTableName + '\'' +
+               '}';
+    }
 }

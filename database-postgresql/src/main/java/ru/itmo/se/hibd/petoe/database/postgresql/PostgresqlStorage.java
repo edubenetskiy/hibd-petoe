@@ -22,22 +22,22 @@ public class PostgresqlStorage implements Storage {
                 getPostgresqlTable()
                         .internalTableName("speciality")
                         .targetTableName("speciality")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("speciality_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("students")
                         .targetTableName("student")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("student_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("lecturers")
                         .targetTableName("person")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("lecturer_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("subjects")
                         .targetTableName("subject")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("subject_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("lecturers_to_subjects")
@@ -52,7 +52,7 @@ public class PostgresqlStorage implements Storage {
                 getPostgresqlTable()
                         .internalTableName("record_book")
                         .targetTableName("record_book")
-                        .idExtractor(MapRecordKeyExtractor.withColumns("student_id", "subject_id", "lecturer_id"))
+                        .idExtractor(MapRecordKeyExtractor.withColumns("student_id", "subject_id", "teacher_id"))
                         .build()
         );
     }
