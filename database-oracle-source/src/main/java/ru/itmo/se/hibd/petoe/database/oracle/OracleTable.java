@@ -57,4 +57,12 @@ public class OracleTable implements Table {
         return Map.entry(entry.getKey(), value);
     }
 
+    @Override public String toString() {
+        return "OracleTable{" +
+               "storage=" + storage +
+               ", internalTableName='" + internalTableName + '\'' +
+               ", idExtractor=" + idExtractor +
+               ", targetTableName='" + targetTableName + '\'' +
+               '}';
+    }
 }
