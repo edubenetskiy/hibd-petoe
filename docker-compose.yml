@@ -49,4 +49,4 @@ services:
       - 1521:1521
       - 5500:5500
     volumes:
-      - ./db-init/oracle-final-init.sql:/docker-entrypoint-initdb.d/oracle-final-init.sql:ro
+      - ./db-init/oracle-final/:/docker-entrypoint-initdb.d/:ro
