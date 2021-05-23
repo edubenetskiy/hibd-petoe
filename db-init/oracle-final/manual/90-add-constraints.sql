@@ -1,14 +1,15 @@
-
 ALTER TABLE megafaculty
-    MODIFY (name NOT NULL);
-
+    MODIFY (id PRIMARY KEY,
+            name NOT NULL);
 
 ALTER TABLE faculty
-    MODIFY (name NOT NULL)
+    MODIFY (id PRIMARY KEY,
+            name NOT NULL)
     ADD FOREIGN KEY (megafaculty_id) REFERENCES megafaculty (id);
 
 ALTER TABLE person
-    MODIFY (name NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            name NOT NULL,
             surname NOT NULL,
             date_of_birth NOT NULL,
             country_of_birth NOT NULL,
@@ -17,10 +18,12 @@ ALTER TABLE person
     ADD FOREIGN KEY (faculty_id) REFERENCES faculty (id);
 
 ALTER TABLE person_job
-    MODIFY (name NOT NULL);
+    MODIFY (id PRIMARY KEY,
+            name NOT NULL);
 
 ALTER TABLE teacher
-    MODIFY (person_id NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            person_id NOT NULL,
             person_job_id NOT NULL,
             start_date NOT NULL,
             end_date NOT NULL)
@@ -28,7 +31,8 @@ ALTER TABLE teacher
     ADD FOREIGN KEY (person_job_id) REFERENCES person_job (id);
 
 ALTER TABLE study_group
-    MODIFY (group_number NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            group_number NOT NULL,
             course_number NOT NULL,
             start_study_date NOT NULL);
 
@@ -37,7 +41,7 @@ ALTER TABLE speciality
             name NOT NULL,
             code NOT NULL,
             qualification NOT NULL CHECK (
-                    qualification IN ('бакалавр', 'магистр', 'специалист')),
+                qualification IN ('бакалавр', 'магистр', 'специалист')),
             standard_type NOT NULL CHECK (standard_type IN ('старый', 'новый')),
             study_form NOT NULL CHECK (study_form IN ('очная', 'заочная')),
             faculty_id NOT NULL)
@@ -47,6 +51,7 @@ ALTER TABLE speciality
 
 ALTER TABLE direction
     MODIFY (
+        id PRIMARY KEY,
         name NOT NULL,
         code NOT NULL)
     ADD CONSTRAINT check_direction_code
@@ -54,6 +59,7 @@ ALTER TABLE direction
 
 ALTER TABLE student
     MODIFY (
+        id PRIMARY KEY,
         study_type CHECK (study_type IN ('бюджет', 'контракт')),
         is_privileged NOT NULL,
         study_group_id NOT NULL,
@@ -66,7 +72,8 @@ ALTER TABLE student
     ADD FOREIGN KEY (person_id) REFERENCES person (id);
 
 ALTER TABLE subject
-    MODIFY (name NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            name NOT NULL,
             code NOT NULL,
             lecture_hours NOT NULL,
             workshop_hours NOT NULL,
@@ -75,6 +82,7 @@ ALTER TABLE subject
 
 ALTER TABLE timetable
     MODIFY (
+        id PRIMARY KEY,
         time_slot NOT NULL,
         room_number NOT NULL,
         teacher_id NOT NULL,
@@ -85,12 +93,14 @@ ALTER TABLE timetable
     ADD FOREIGN KEY (study_group_id) REFERENCES study_group (id);
 
 ALTER TABLE conference
-    MODIFY (name NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            name NOT NULL,
             place NOT NULL,
             conference_date NOT NULL);
 
 ALTER TABLE publication
-    MODIFY (name NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            name NOT NULL,
             edition_lang NOT NULL,
             edition_vol NOT NULL,
             edition_place NOT NULL,
@@ -100,12 +110,14 @@ ALTER TABLE publication
 
 ALTER TABLE project
     MODIFY (
+        id PRIMARY KEY,
         name NOT NULL,
         start_date NOT NULL,
         end_date NOT NULL);
 
 ALTER TABLE library_card
-    MODIFY (book_name NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            book_name NOT NULL,
             receive_date NOT NULL,
             return_date NOT NULL);
 
@@ -134,15 +146,18 @@ ALTER TABLE conference_participant
     ADD CONSTRAINT pk_conference_participant PRIMARY KEY (person_id, conference_id);
 
 ALTER TABLE dorm
-    MODIFY (address NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            address NOT NULL,
             number_of_rooms NOT NULL);
 
 ALTER TABLE room_type
-    MODIFY (number_of_places NOT NULL,
+    MODIFY (id PRIMARY KEY,
+            number_of_places NOT NULL,
             price NOT NULL);
 
 ALTER TABLE room
     MODIFY (
+        id PRIMARY KEY,
         dorm_id NOT NULL,
         room_type_id NOT NULL,
         number_of_occupied_places NOT NULL,
@@ -152,6 +167,7 @@ ALTER TABLE room
 
 ALTER TABLE student_dorm_info
     MODIFY (
+        id PRIMARY KEY,
         student_id NOT NULL,
         room_id NOT NULL,
         date_of_entry NOT NULL,

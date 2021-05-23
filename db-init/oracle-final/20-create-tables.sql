@@ -2,20 +2,20 @@ ALTER SESSION SET CURRENT_SCHEMA = hibd;
 
 CREATE TABLE megafaculty
 (
-    id   number PRIMARY KEY,
+    id   number,
     name varchar2(100)
 );
 
 CREATE TABLE faculty
 (
-    id             number PRIMARY KEY,
+    id             number,
     name           varchar2(100),
     megafaculty_id number
 );
 
 CREATE TABLE person
 (
-    id               number PRIMARY KEY,
+    id               number,
     name             varchar2(100),
     surname          varchar2(100),
     patronymic       varchar2(100),
@@ -28,13 +28,13 @@ CREATE TABLE person
 
 CREATE TABLE person_job
 (
-    id   number PRIMARY KEY,
+    id   number,
     name varchar2(100)
 );
 
 CREATE TABLE teacher
 (
-    id            number PRIMARY KEY,
+    id            number,
     person_id     number,
     person_job_id number,
     start_date    date,
@@ -43,7 +43,7 @@ CREATE TABLE teacher
 
 CREATE TABLE study_group
 (
-    id               number PRIMARY KEY,
+    id               number,
     group_number     varchar2(100),
     course_number    number,
     start_study_date date,
@@ -52,7 +52,7 @@ CREATE TABLE study_group
 
 CREATE TABLE speciality
 (
-    id            number PRIMARY KEY,
+    id            number,
     name          varchar2(1000),
     code          varchar2(1000),
     qualification varchar2(1000),
@@ -63,14 +63,14 @@ CREATE TABLE speciality
 
 CREATE TABLE direction
 (
-    id   number PRIMARY KEY,
+    id   number,
     name varchar2(1000),
     code varchar2(1000)
 );
 
 CREATE TABLE student
 (
-    id             number PRIMARY KEY,
+    id             number,
     study_type     varchar2(1000),
     is_privileged  number(1, 0),
     study_group_id number,
@@ -81,7 +81,7 @@ CREATE TABLE student
 
 CREATE TABLE subject
 (
-    id               number PRIMARY KEY,
+    id               number,
     name             varchar2(1000),
     code             varchar2(1000),
     lecture_hours    number,
@@ -92,7 +92,7 @@ CREATE TABLE subject
 
 CREATE TABLE timetable
 (
-    id             number PRIMARY KEY,
+    id             number,
     time_slot      timestamp,
     room_number    number,
     teacher_id     number,
@@ -102,7 +102,7 @@ CREATE TABLE timetable
 
 CREATE TABLE conference
 (
-    id              number PRIMARY KEY,
+    id              number,
     name            varchar2(1000),
     place           varchar2(1000),
     conference_date date
@@ -110,7 +110,7 @@ CREATE TABLE conference
 
 CREATE TABLE publication
 (
-    id               number PRIMARY KEY,
+    id               number,
     name             varchar2(1000),
     edition_lang     varchar2(1000),
     edition_vol      number,
@@ -122,7 +122,7 @@ CREATE TABLE publication
 
 CREATE TABLE project
 (
-    id         number PRIMARY KEY,
+    id         number,
     name       varchar2(1000),
     start_date date,
     end_date   date
@@ -130,7 +130,7 @@ CREATE TABLE project
 
 CREATE TABLE library_card
 (
-    id           number PRIMARY KEY,
+    id           number,
     book_name    varchar2(1000),
     receive_date date,
     return_date  date
@@ -157,21 +157,21 @@ CREATE TABLE conference_participant
 
 CREATE TABLE dorm
 (
-    id              number PRIMARY KEY,
+    id              number,
     address         varchar2(1000),
     number_of_rooms number
 );
 
 CREATE TABLE room_type
 (
-    id               number PRIMARY KEY,
+    id               number,
     number_of_places number,
     price            number
 );
 
 CREATE TABLE room
 (
-    id                        number PRIMARY KEY,
+    id                        number,
     dorm_id                   number,
     room_type_id              number,
     number_of_occupied_places number,
@@ -181,7 +181,7 @@ CREATE TABLE room
 
 CREATE TABLE student_dorm_info
 (
-    id                      number PRIMARY KEY,
+    id                      number,
     student_id              number,
     room_id                 number,
     date_of_entry           date,
