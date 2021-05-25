@@ -3,10 +3,11 @@ package ru.itmo.se.hibd.petoe.database.postgresql;
 import org.jdbi.v3.core.Jdbi;
 import ru.itmo.se.hibd.lab1.importer.core.Storage;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
-import ru.itmo.se.hibd.petoe.recordkeyextractor.MapRecordKeyExtractor;
 
 import java.util.Collection;
 import java.util.List;
+
+import static ru.itmo.se.hibd.petoe.recordkeyextractor.MapRecordKeyExtractor.longColumns;
 
 public class PostgresqlStorage implements Storage {
 
@@ -22,37 +23,37 @@ public class PostgresqlStorage implements Storage {
                 getPostgresqlTable()
                         .internalTableName("speciality")
                         .targetTableName("speciality")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
+                        .idExtractor(longColumns("id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("students")
                         .targetTableName("student")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
+                        .idExtractor(longColumns("id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("lecturers")
                         .targetTableName("person")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
+                        .idExtractor(longColumns("id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("subjects")
                         .targetTableName("subject")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
+                        .idExtractor(longColumns("id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("lecturers_to_subjects")
                         .targetTableName("teacher_subject")
-                        .idExtractor(MapRecordKeyExtractor.withColumns("teacher_id", "subject_id"))
+                        .idExtractor(longColumns("teacher_id", "subject_id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("specialities_to_subjects")
                         .targetTableName("speciality_subject")
-                        .idExtractor(MapRecordKeyExtractor.withColumns("speciality_id", "subject_id"))
+                        .idExtractor(longColumns("speciality_id", "subject_id"))
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("record_book")
                         .targetTableName("record_book")
-                        .idExtractor(MapRecordKeyExtractor.withColumns("student_id", "subject_id", "teacher_id"))
+                        .idExtractor(longColumns("student_id", "subject_id", "teacher_id"))
                         .build()
         );
     }

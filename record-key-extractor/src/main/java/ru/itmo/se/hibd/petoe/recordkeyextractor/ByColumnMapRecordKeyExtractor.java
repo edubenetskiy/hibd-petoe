@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ByColumnMapRecordKeyExtractor implements MapRecordKeyExtractor {
+public class ByColumnMapRecordKeyExtractor implements MapRecordKeyExtractor<Object> {
 
     public static final ByColumnMapRecordKeyExtractor BY_ID = new ByColumnMapRecordKeyExtractor(List.of("id"));
 

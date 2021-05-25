@@ -3,10 +3,12 @@ package ru.itmo.se.hibd.petoe.database.mysql;
 import org.jdbi.v3.core.Jdbi;
 import ru.itmo.se.hibd.lab1.importer.core.Storage;
 import ru.itmo.se.hibd.lab1.importer.core.Table;
-import ru.itmo.se.hibd.petoe.recordkeyextractor.MapRecordKeyExtractor;
 
 import java.util.Collection;
 import java.util.List;
+
+import static ru.itmo.se.hibd.petoe.recordkeyextractor.MapRecordKeyExtractor.allColumns;
+import static ru.itmo.se.hibd.petoe.recordkeyextractor.MapRecordKeyExtractor.longColumns;
 
 public class MysqlStorage implements Storage {
 
@@ -22,42 +24,42 @@ public class MysqlStorage implements Storage {
                 mysqlTable()
                         .internalTableName("coauthors")
                         .targetTableName("coauthors")
-                        .idExtractor(MapRecordKeyExtractor.withColumns("person_id", "publication_id"))
+                        .idExtractor(longColumns("person_id", "publication_id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("conferences")
                         .targetTableName("conference")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
+                        .idExtractor(longColumns("id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("conferences_participants")
                         .targetTableName("conference_participant")
-                        .idExtractor(MapRecordKeyExtractor.withColumns("person_id", "conference_id"))
+                        .idExtractor(longColumns("person_id", "conference_id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("library_card")
                         .targetTableName("library_card")
-                        .idExtractor(MapRecordKeyExtractor.withAllColumns())
+                        .idExtractor(allColumns())
                         .build(),
                 mysqlTable()
                         .internalTableName("persons")
                         .targetTableName("person")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("person_id"))
+                        .idExtractor(longColumns("person_id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("project_participants")
                         .targetTableName("project_participant")
-                        .idExtractor(MapRecordKeyExtractor.withColumns("person_id", "project_id"))
+                        .idExtractor(longColumns("person_id", "project_id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("projects")
                         .targetTableName("project")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
+                        .idExtractor(longColumns("id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("publications")
                         .targetTableName("publication")
-                        .idExtractor(MapRecordKeyExtractor.withColumn("id"))
+                        .idExtractor(longColumns("id"))
                         .build()
         );
     }
