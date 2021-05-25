@@ -32,6 +32,9 @@ services:
       - 5501:5500
     volumes:
       - ./db-init/oracle-init.sql:/docker-entrypoint-initdb.d/oracle-init.sql:ro
+    environment:
+      LANG: C.UTF-8
+      NLS_LANG: AMERICAN_AMERICA.AL32UTF8
 
   db-mysql:
     image: mysql
@@ -53,3 +56,6 @@ services:
       - 5500:5500
     volumes:
       - ./db-init/oracle-final/:/docker-entrypoint-initdb.d/:ro
+    environment:
+      LANG: C.UTF-8
+      NLS_LANG: AMERICAN_AMERICA.AL32UTF8
