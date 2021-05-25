@@ -39,6 +39,7 @@ services:
     volumes:
       - ./db-init/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql:ro
     environment:
+      - LANG=C.UTF-8
       - MYSQL_DATABASE=mysqldb
       - MYSQL_ROOT_PASSWORD=admin
 
