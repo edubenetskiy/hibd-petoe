@@ -16,7 +16,13 @@ CREATE TABLE faculty
     FOREIGN KEY (megafaculty_id) REFERENCES megafaculty (id)
 );
 
-CREATE TABLE person
+CREATE TABLE person_job
+(
+    id   number PRIMARY KEY,
+    name varchar2(100) NOT NULL
+);
+
+CREATE TABLE teacher
 (
     id               number PRIMARY KEY,
     name             varchar2(100) NOT NULL,
@@ -26,24 +32,11 @@ CREATE TABLE person
     country_of_birth varchar2(100) NOT NULL,
     city_of_birth    varchar2(100) NOT NULL,
     faculty_id       number NOT NULL,
+    person_job_id    number NOT NULL,
+    start_date       date   NOT NULL,
+    end_date         date,
+    FOREIGN KEY (person_job_id) REFERENCES person_job (id),
     FOREIGN KEY (faculty_id) REFERENCES faculty (id)
-);
-
-CREATE TABLE person_job
-(
-    id   number PRIMARY KEY,
-    name varchar2(100) NOT NULL
-);
-
-CREATE TABLE teacher
-(
-    id            number PRIMARY KEY,
-    person_id     number NOT NULL,
-    person_job_id number NOT NULL,
-    start_date    date   NOT NULL,
-    end_date      date,
-    FOREIGN KEY (person_id) REFERENCES person (id),
-    FOREIGN KEY (person_job_id) REFERENCES person_job (id)
 );
 
 CREATE TABLE study_group
@@ -81,16 +74,22 @@ CREATE TABLE direction
 
 CREATE TABLE student
 (
-    id             number PRIMARY KEY,
-    study_type     varchar2(100) CHECK (study_type IN ('бюджет', 'контракт')),
-    study_group_id number NOT NULL,
-    direction_id   number NOT NULL,
-    speciality_id  number NOT NULL,
-    person_id      number NOT NULL,
+    id               number PRIMARY KEY,
+    study_type       varchar2(100) CHECK (study_type IN ('бюджет', 'контракт')),
+    study_group_id   number NOT NULL,
+    direction_id     number NOT NULL,
+    speciality_id    number NOT NULL,
+    name             varchar2(100) NOT NULL,
+    surname          varchar2(100) NOT NULL,
+    patronymic       varchar2(100),
+    date_of_birth    date   NOT NULL,
+    country_of_birth varchar2(100) NOT NULL,
+    city_of_birth    varchar2(100) NOT NULL,
+    faculty_id       number NOT NULL,
+    FOREIGN KEY (faculty_id) REFERENCES faculty (id),
     FOREIGN KEY (study_group_id) REFERENCES study_group (id),
     FOREIGN KEY (direction_id) REFERENCES direction (id),
-    FOREIGN KEY (speciality_id) REFERENCES speciality (id),
-    FOREIGN KEY (person_id) REFERENCES person (id)
+    FOREIGN KEY (speciality_id) REFERENCES speciality (id)
 );
 
 CREATE TABLE subject
@@ -140,57 +139,6 @@ VALUES (1, 'ПИиКТ', 1);
 INSERT INTO faculty(id, name, megafaculty_id)
 VALUES (2, 'ФИТиП', 2);
 
-INSERT INTO person(id,
-                   name,
-                   surname,
-                   patronymic,
-                   date_of_birth,
-                   country_of_birth,
-                   city_of_birth,
-                   faculty_id)
-VALUES (1,
-        'Иван',
-        'Иванов',
-        'Иванович',
-        '01-JAN-1997',
-        'Россия',
-        'Москва',
-        1);
-
-INSERT INTO person(id,
-                   name,
-                   surname,
-                   patronymic,
-                   date_of_birth,
-                   country_of_birth,
-                   city_of_birth,
-                   faculty_id)
-VALUES (2,
-        'Владимир',
-        'Владимирв',
-        'Владимирович',
-        '01-JAN-1995',
-        'Россия',
-        'Санкт-Петербург',
-        2);
-
-INSERT INTO person(id,
-                   name,
-                   surname,
-                   patronymic,
-                   date_of_birth,
-                   country_of_birth,
-                   city_of_birth,
-                   faculty_id)
-VALUES (3,
-        'Петр',
-        'Петров',
-        'Петрович',
-        '01-JAN-1996',
-        'Россия',
-        'Уфа',
-        1);
-
 INSERT INTO person_job(id, name)
 VALUES (1, 'доцент');
 
@@ -198,11 +146,27 @@ INSERT INTO person_job(id, name)
 VALUES (2, 'профессор');
 
 INSERT INTO teacher(id,
-                    person_id,
+                    name,
+                    surname,
+                    patronymic,
+                    date_of_birth,
+                    country_of_birth,
+                    city_of_birth,
+                    faculty_id,
                     person_job_id,
                     start_date,
                     end_date)
-VALUES (1, 1, 1, '01-JAN-2000', '01-JAN-2001');
+VALUES (1,
+        'Иван',
+        'Иванов',
+        'Иванович',
+        '01-JAN-1997',
+        'Россия',
+        'Москва',
+        1,
+        1,
+        '01-JAN-2000',
+        '01-JAN-2001');
 
 INSERT INTO study_group(id,
                         group_number,
@@ -226,8 +190,25 @@ INSERT INTO student(id,
                     study_group_id,
                     direction_id,
                     speciality_id,
-                    person_id)
-VALUES (1, 'бюджет', 1, 1, 1, 2);
+                    name,
+                    surname,
+                    patronymic,
+                    date_of_birth,
+                    country_of_birth,
+                    city_of_birth,
+                    faculty_id)
+VALUES (1,
+        'бюджет',
+        1,
+        1,
+        1,
+        'Петр',
+        'Петров',
+        'Петрович',
+        '01-JAN-1996',
+        'Россия',
+        'Уфа',
+        1);
 
 INSERT INTO subject(id, name)
 VALUES (1, 'Базы данных');

@@ -7,27 +7,22 @@ ALTER TABLE faculty
             name NOT NULL)
     ADD FOREIGN KEY (megafaculty_id) REFERENCES megafaculty (id);
 
-ALTER TABLE person
-    MODIFY (id PRIMARY KEY,
-            name NOT NULL,
-            surname NOT NULL,
-            date_of_birth NOT NULL,
-            country_of_birth NOT NULL,
-            city_of_birth NOT NULL,
-            faculty_id NOT NULL)
-    ADD FOREIGN KEY (faculty_id) REFERENCES faculty (id);
-
 ALTER TABLE person_job
     MODIFY (id PRIMARY KEY,
             name NOT NULL);
 
 ALTER TABLE teacher
     MODIFY (id PRIMARY KEY,
-            person_id NOT NULL,
             person_job_id NOT NULL,
             start_date NOT NULL,
             end_date NOT NULL)
-    ADD FOREIGN KEY (person_id) REFERENCES person (id)
+            name NOT NULL,
+            surname NOT NULL,
+            date_of_birth NOT NULL,
+            country_of_birth NOT NULL,
+            city_of_birth NOT NULL,
+            faculty_id NOT NULL)
+    ADD FOREIGN KEY (faculty_id) REFERENCES faculty (id)
     ADD FOREIGN KEY (person_job_id) REFERENCES person_job (id);
 
 ALTER TABLE study_group
@@ -65,11 +60,16 @@ ALTER TABLE student
         study_group_id NOT NULL,
         direction_id NOT NULL,
         speciality_id NOT NULL,
-        person_id NOT NULL)
+        name NOT NULL,
+        surname NOT NULL,
+        date_of_birth NOT NULL,
+        country_of_birth NOT NULL,
+        city_of_birth NOT NULL,
+        faculty_id NOT NULL)
+    ADD FOREIGN KEY (faculty_id) REFERENCES faculty (id)
     ADD FOREIGN KEY (study_group_id) REFERENCES study_group (id)
     ADD FOREIGN KEY (direction_id) REFERENCES direction (id)
-    ADD FOREIGN KEY (speciality_id) REFERENCES speciality (id)
-    ADD FOREIGN KEY (person_id) REFERENCES person (id);
+    ADD FOREIGN KEY (speciality_id) REFERENCES speciality (id);
 
 ALTER TABLE subject
     MODIFY (id PRIMARY KEY,
@@ -121,29 +121,53 @@ ALTER TABLE library_card
             receive_date NOT NULL,
             return_date NOT NULL);
 
-ALTER TABLE project_participant
+ALTER TABLE project_student
     MODIFY (
-        person_id NOT NULL,
+        student_id NOT NULL,
         project_id NOT NULL)
-    ADD FOREIGN KEY (person_id) REFERENCES person (id)
+    ADD FOREIGN KEY (student_id) REFERENCES student (id)
     ADD FOREIGN KEY (project_id) REFERENCES project (id)
-    ADD CONSTRAINT pk_project_participant PRIMARY KEY (person_id, project_id);
+    ADD CONSTRAINT pk_project_student PRIMARY KEY (student_id, project_id);
 
-ALTER TABLE coauthors
+ALTER TABLE project_teacher
     MODIFY (
-        person_id NOT NULL,
+        teacher_id NOT NULL,
+        project_id NOT NULL)
+    ADD FOREIGN KEY (teacher_id) REFERENCES teacher (id)
+    ADD FOREIGN KEY (project_id) REFERENCES project (id)
+    ADD CONSTRAINT pk_project_teacher PRIMARY KEY (teacher_id, project_id);
+
+ALTER TABLE coauthors_student
+    MODIFY (
+        student_id NOT NULL,
         publication_id NOT NULL)
-    ADD FOREIGN KEY (person_id) REFERENCES person (id)
+    ADD FOREIGN KEY (student_id) REFERENCES student (id)
     ADD FOREIGN KEY (publication_id) REFERENCES publication (id)
-    ADD CONSTRAINT pk_coauthors PRIMARY KEY (person_id, publication_id);
+    ADD CONSTRAINT pk_coauthors_student PRIMARY KEY (student_id, publication_id);
 
-ALTER TABLE conference_participant
+ALTER TABLE coauthors_teacher
     MODIFY (
-        person_id NOT NULL,
+        teacher_id NOT NULL,
+        publication_id NOT NULL)
+    ADD FOREIGN KEY (teacher_id) REFERENCES teacher (id)
+    ADD FOREIGN KEY (publication_id) REFERENCES publication (id)
+    ADD CONSTRAINT pk_coauthors_teacher PRIMARY KEY (teacher_id, publication_id);
+
+ALTER TABLE conference_student
+    MODIFY (
+        student_id NOT NULL,
         conference_id NOT NULL)
-    ADD FOREIGN KEY (person_id) REFERENCES person (id)
+    ADD FOREIGN KEY (student_id) REFERENCES student (id)
     ADD FOREIGN KEY (conference_id) REFERENCES conference (id)
-    ADD CONSTRAINT pk_conference_participant PRIMARY KEY (person_id, conference_id);
+    ADD CONSTRAINT pk_conference_student PRIMARY KEY (student_id, conference_id);
+
+ALTER TABLE conference_teacher
+    MODIFY (
+        teacher_id NOT NULL,
+        conference_id NOT NULL)
+    ADD FOREIGN KEY (teacher_id) REFERENCES teacher (id)
+    ADD FOREIGN KEY (conference_id) REFERENCES conference (id)
+    ADD CONSTRAINT pk_conference_teacher PRIMARY KEY (teacher_id, conference_id);
 
 ALTER TABLE dorm
     MODIFY (id PRIMARY KEY,

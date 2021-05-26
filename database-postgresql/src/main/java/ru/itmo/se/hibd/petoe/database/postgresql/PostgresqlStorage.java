@@ -32,7 +32,7 @@ public class PostgresqlStorage implements Storage {
                         .build(),
                 getPostgresqlTable()
                         .internalTableName("lecturers")
-                        .targetTableName("person")
+                        .targetTableName("teacher")
                         .idExtractor(longColumns("id"))
                         .build(),
                 getPostgresqlTable()

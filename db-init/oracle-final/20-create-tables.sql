@@ -13,7 +13,13 @@ CREATE TABLE faculty
     megafaculty_id number
 );
 
-CREATE TABLE person
+CREATE TABLE person_job
+(
+    id   number,
+    name varchar2(100)
+);
+
+CREATE TABLE teacher
 (
     id               number,
     name             varchar2(100),
@@ -23,22 +29,10 @@ CREATE TABLE person
     country_of_birth varchar2(100),
     city_of_birth    varchar2(100),
     person_position  varchar2(100),
-    faculty_id       number
-);
-
-CREATE TABLE person_job
-(
-    id   number,
-    name varchar2(100)
-);
-
-CREATE TABLE teacher
-(
-    id            number,
-    person_id     number,
-    person_job_id number,
-    start_date    date,
-    end_date      date
+    faculty_id       number,
+    person_job_id    number,
+    start_date       date,
+    end_date         date
 );
 
 CREATE TABLE study_group
@@ -70,13 +64,20 @@ CREATE TABLE direction
 
 CREATE TABLE student
 (
-    id             number,
-    study_type     varchar2(1000),
-    is_privileged  number(1, 0),
-    study_group_id number,
-    direction_id   number,
-    speciality_id  number,
-    person_id      number
+    id               number,
+    study_type       varchar2(1000),
+    is_privileged    number(1, 0),
+    study_group_id   number,
+    direction_id     number,
+    speciality_id    number,
+    name             varchar2(100),
+    surname          varchar2(100),
+    patronymic       varchar2(100),
+    date_of_birth    date,
+    country_of_birth varchar2(100),
+    city_of_birth    varchar2(100),
+    person_position  varchar2(100),
+    faculty_id       number
 );
 
 CREATE TABLE subject
@@ -136,21 +137,39 @@ CREATE TABLE library_card
     return_date  date
 );
 
-CREATE TABLE project_participant
+CREATE TABLE project_student
 (
-    person_id  number,
+    student_id number,
     project_id number
 );
 
-CREATE TABLE coauthors
+CREATE TABLE project_teacher
 (
-    person_id      number,
+    teacher_id number,
+    project_id number
+);
+
+CREATE TABLE coauthors_student
+(
+    student_id     number,
     publication_id number
 );
 
-CREATE TABLE conference_participant
+CREATE TABLE coauthors_teacher
 (
-    person_id     number,
+    teacher_id     number,
+    publication_id number
+);
+
+CREATE TABLE conference_student
+(
+    student_id    number,
+    conference_id number
+);
+
+CREATE TABLE conference_teacher
+(
+    teacher_id    number,
     conference_id number
 );
 

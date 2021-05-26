@@ -31,11 +31,6 @@ public class OracleStorage implements Storage {
                         .idExtractor(longColumns("id", "megafaculty_id"))
                         .build(),
                 getOracleTable()
-                        .internalTableName("person")
-                        .targetTableName("person")
-                        .idExtractor(longColumns("id", "faculty_id"))
-                        .build(),
-                getOracleTable()
                         .internalTableName("person_job")
                         .targetTableName("person_job")
                         .idExtractor(longColumns("id"))
@@ -43,7 +38,7 @@ public class OracleStorage implements Storage {
                 getOracleTable()
                         .internalTableName("teacher")
                         .targetTableName("teacher")
-                        .idExtractor(longColumns("id", "person_id", "person_job_id"))
+                        .idExtractor(longColumns("id", "faculty_id", "person_job_id"))
                         .build(),
                 getOracleTable()
                         .internalTableName("study_group")
@@ -64,7 +59,7 @@ public class OracleStorage implements Storage {
                         .internalTableName("student")
                         .targetTableName("student")
                         .idExtractor(longColumns("id", "study_group_id",
-                                "direction_id", "speciality_id", "person_id"))
+                                "direction_id", "speciality_id", "faculty_id"))
                         .build(),
                 getOracleTable()
                         .internalTableName("subject")

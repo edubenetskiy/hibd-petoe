@@ -22,9 +22,14 @@ public class MysqlStorage implements Storage {
     public Collection<Table> getTables() {
         return List.of(
                 mysqlTable()
-                        .internalTableName("coauthors")
-                        .targetTableName("coauthors")
-                        .idExtractor(longColumns("person_id", "publication_id"))
+                        .internalTableName("coauthors_student")
+                        .targetTableName("coauthors_student")
+                        .idExtractor(longColumns("student_id", "publication_id"))
+                        .build(),
+                mysqlTable()
+                        .internalTableName("coauthors_teacher")
+                        .targetTableName("coauthors_teacher")
+                        .idExtractor(longColumns("teacher_id", "publication_id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("conferences")
@@ -32,9 +37,14 @@ public class MysqlStorage implements Storage {
                         .idExtractor(longColumns("id"))
                         .build(),
                 mysqlTable()
-                        .internalTableName("conferences_participants")
-                        .targetTableName("conference_participant")
-                        .idExtractor(longColumns("person_id", "conference_id"))
+                        .internalTableName("conferences_student")
+                        .targetTableName("conference_student")
+                        .idExtractor(longColumns("student_id", "conference_id"))
+                        .build(),
+                mysqlTable()
+                        .internalTableName("conferences_teacher")
+                        .targetTableName("conference_teacher")
+                        .idExtractor(longColumns("teacher_id", "conference_id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("library_card")
@@ -42,14 +52,24 @@ public class MysqlStorage implements Storage {
                         .idExtractor(allColumns())
                         .build(),
                 mysqlTable()
-                        .internalTableName("persons")
-                        .targetTableName("person")
-                        .idExtractor(longColumns("person_id"))
+                        .internalTableName("students")
+                        .targetTableName("student")
+                        .idExtractor(longColumns("student_id"))
                         .build(),
                 mysqlTable()
-                        .internalTableName("project_participants")
-                        .targetTableName("project_participant")
-                        .idExtractor(longColumns("person_id", "project_id"))
+                        .internalTableName("teachers")
+                        .targetTableName("teacher")
+                        .idExtractor(longColumns("teacher_id"))
+                        .build(),
+                mysqlTable()
+                        .internalTableName("project_student")
+                        .targetTableName("project_student")
+                        .idExtractor(longColumns("student_id", "project_id"))
+                        .build(),
+                mysqlTable()
+                        .internalTableName("project_teacher")
+                        .targetTableName("project_teacher")
+                        .idExtractor(longColumns("teacher_id", "project_id"))
                         .build(),
                 mysqlTable()
                         .internalTableName("projects")
