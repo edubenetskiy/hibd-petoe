@@ -59,3 +59,15 @@ services:
     environment:
       LANG: C.UTF-8
       NLS_LANG: AMERICAN_AMERICA.AL32UTF8
+
+  db-oracle3rd:
+    image: oracleinanutshell/oracle-xe-11g:latest
+    container_name: db-oracle3rd
+    ports:
+      - 1523:1521
+      - 5502:5500
+    volumes:
+      - ./db-init/oracle3rd-init.sql:/docker-entrypoint-initdb.d/oracle3rd-init.sql:ro
+    environment:
+      LANG: C.UTF-8
+      NLS_LANG: AMERICAN_AMERICA.AL32UTF8
