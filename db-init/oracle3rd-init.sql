@@ -2,6 +2,8 @@ CREATE USER orac3rd IDENTIFIED BY orac3rd;
 GRANT ALL PRIVILEGES TO orac3rd;
 ALTER SESSION SET CURRENT_SCHEMA = orac3rd;
 
+select * from v$option where parameter = 'OLAP';
+
 create table birthPlace(
     id number PRIMARY KEY,
     district varchar2(1000) NOT NULL,

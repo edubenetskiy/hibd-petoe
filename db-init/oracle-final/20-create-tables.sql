@@ -28,7 +28,7 @@ CREATE TABLE teacher
     date_of_birth    date,
     country_of_birth varchar2(100),
     city_of_birth    varchar2(100),
-    person_position  varchar2(100),
+    teacher_position  varchar2(100),
     faculty_id       number,
     person_job_id    number,
     start_date       date,
@@ -76,7 +76,7 @@ CREATE TABLE student
     date_of_birth    date,
     country_of_birth varchar2(100),
     city_of_birth    varchar2(100),
-    person_position  varchar2(100),
+    student_position  varchar2(100),
     faculty_id       number
 );
 
