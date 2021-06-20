@@ -142,6 +142,9 @@ public class WarehouseLoaderApplication {
         try (ProgressBar progressBar = new ProgressBar("Writing FactTable2", (long) allSemesters.size() * allPlacesOfBirth.size())) {
             StreamEx.of(allSemesters).cross(allPlacesOfBirth)
                     .forEach((entry) -> {
+                        if (progressBar.getCurrent() >= 20_000) {
+                            return;
+                        }
                         var semester = entry.getKey();
                         var placeOfBirth = entry.getValue();
                         Map<String, ?> rowForFactTable2 = createRowForFactTable2(sourceDatabase, semester, placeOfBirth);
