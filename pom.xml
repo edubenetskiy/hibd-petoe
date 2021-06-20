@@ -26,6 +26,7 @@
         <module>database-oracle-source</module>
         <module>database-postgresql</module>
         <module>record-key-extractor</module>
+        <module>warehouse-loader-app</module>
     </modules>
 
     <dependencyManagement>
@@ -107,8 +108,18 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
                 <artifactId>commons-collections4</artifactId>
                 <version>4.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>3.6.1</version>
             </dependency>
             <dependency>
                 <groupId>one.util</groupId>
