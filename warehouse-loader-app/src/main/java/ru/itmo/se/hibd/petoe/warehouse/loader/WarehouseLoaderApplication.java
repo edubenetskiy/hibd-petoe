@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import me.tongfei.progressbar.ProgressBar;
 import one.util.streamex.StreamEx;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
@@ -102,17 +103,18 @@ public class WarehouseLoaderApplication {
     }
 
     private static void populateFactTable1(org.jdbi.v3.core.Handle warehouse, org.jdbi.v3.core.Handle sourceHandle) {
-        ALL_SEMESTERS.parallelStream().forEach(semester -> {
-            Map<String, ?> row = FactTable1Generator.createRowForFactTable1(sourceHandle, semester);
-            try {
-                warehouse.createUpdate(INSERT_FACT_TABLE_1)
-                        .bindMap(row)
-                        .execute();
-                log.info("Written FACTTABLE1 record for {}", semester);
-            } catch (Exception e) {
-                log.error("Failed to INSERT into FACTTABLE1", e);
-            }
-        });
+        ProgressBar.wrap(ALL_SEMESTERS.parallelStream(), "Writing FactTable1")
+                .forEach(semester -> {
+                    Map<String, ?> row = FactTable1Generator.createRowForFactTable1(sourceHandle, semester);
+                    try {
+                        warehouse.createUpdate(INSERT_FACT_TABLE_1)
+                                .bindMap(row)
+                                .execute();
+                        log.info("Written FACTTABLE1 record for {}", semester);
+                    } catch (Exception e) {
+                        log.error("Failed to INSERT into FACTTABLE1", e);
+                    }
+                });
     }
 
     private static void populateFactTable2(Handle warehouse, Handle sourceDatabase) {
@@ -137,21 +139,26 @@ public class WarehouseLoaderApplication {
         Semester maxSemester = new SemesterImpl(YearMonth.of(maxDate.getYear() + 1, Month.MARCH));
         List<Semester> allSemesters = Stream.iterate(minSemester, semester -> semester.next().compareTo(maxSemester) <= 0, Semester::next).collect(toList());
 
-        StreamEx.of(allSemesters).cross(allPlacesOfBirth)
-                .forEach((entry) -> {
-                    var semester = entry.getKey();
-                    var placeOfBirth = entry.getValue();
-                    Map<String, ?> rowForFactTable2 = createRowForFactTable2(sourceDatabase, semester, placeOfBirth);
-                    try {
-                        warehouse.createUpdate("INSERT INTO orac3rd.facttable2 (id, num_of_people_1st_course, birthplaceid, timeid) " +
-                                               "VALUES (:id, :num_of_people_1st_course, :birthplaceid, :timeid)")
-                                .bindMap(rowForFactTable2)
-                                .execute();
-                        log.info("Successful INSERT into FACTTABLE2 for {} and {}: {}", semester, placeOfBirth, rowForFactTable2);
-                    } catch (Exception e) {
-                        log.error("Failed to INSERT into FACTTABLE2: {}", rowForFactTable2, e);
-                    }
-                });
+        try (ProgressBar progressBar = new ProgressBar("Writing FactTable2", (long) allSemesters.size() * allPlacesOfBirth.size())) {
+            StreamEx.of(allSemesters).cross(allPlacesOfBirth)
+                    .forEach((entry) -> {
+                        var semester = entry.getKey();
+                        var placeOfBirth = entry.getValue();
+                        Map<String, ?> rowForFactTable2 = createRowForFactTable2(sourceDatabase, semester, placeOfBirth);
+                        try {
+                            warehouse.createUpdate("INSERT INTO orac3rd.facttable2 (id, num_of_people_1st_course, birthplaceid, timeid) " +
+                                                   "VALUES (:id, :num_of_people_1st_course, :birthplaceid, :timeid)")
+                                    .bindMap(rowForFactTable2)
+                                    .execute();
+                            log.info("Successful INSERT into FACTTABLE2 for {} and {}: {}", semester, placeOfBirth, rowForFactTable2);
+                        } catch (Exception e) {
+                            log.error("Failed to INSERT into FACTTABLE2: {}", rowForFactTable2, e);
+                        } finally {
+                            progressBar.step();
+                        }
+                    });
+            progressBar.close();
+        }
     }
 
     private static List<Map<String, Object>> findAllBirthPlaces(Handle sourceDatabase) {
@@ -216,25 +223,29 @@ public class WarehouseLoaderApplication {
         List<Semester> allSemesters = Stream.iterate(minSemester, semester -> semester.next().compareTo(maxSemester) <= 0, Semester::next).collect(toList());
         // TODO: 20/06/2021 These semesters may not be in DB_TIME table, insert?
 
-        int numRowsCreated = StreamEx.of(allPublishers).cross(allSemesters)
-                .mapKeyValue((publisher, semester) -> {
-                    return generateRowForFactTable3(sourceHandle, publisher, semester);
-                })
-                .mapToInt(rowForFactTable3 -> {
-                    try {
-                        int updateCount = warehouse.createUpdate("INSERT INTO orac3rd.facttable3 (id, num_of_people_master, publisher_id, timeid) " +
-                                                                 "VALUES (:id, :num_of_people_master, :publisher_id, :timeid)")
-                                .bindMap(rowForFactTable3)
-                                .execute();
-                        log.info("Successful INSERT into FACTTABLE3: {}", rowForFactTable3);
-                        return updateCount;
-                    } catch (Exception e) {
-                        log.info("Failed to INSERT into FACTTABLE3: {}", rowForFactTable3, e);
-                        return 0;
-                    }
-                })
-                .sum();
-        log.info("Created {} rows in FACTTABLE3", numRowsCreated);
+        try (ProgressBar progressBar = new ProgressBar("Writing FactTable3", allPublishers.size() * allSemesters.size())) {
+            int numRowsCreated = StreamEx.of(allPublishers).cross(allSemesters)
+                    .mapKeyValue((publisher, semester) -> {
+                        return generateRowForFactTable3(sourceHandle, publisher, semester);
+                    })
+                    .mapToInt(rowForFactTable3 -> {
+                        try {
+                            int updateCount = warehouse.createUpdate("INSERT INTO orac3rd.facttable3 (id, num_of_people_master, publisher_id, timeid) " +
+                                                                     "VALUES (:id, :num_of_people_master, :publisher_id, :timeid)")
+                                    .bindMap(rowForFactTable3)
+                                    .execute();
+                            log.info("Successful INSERT into FACTTABLE3: {}", rowForFactTable3);
+                            return updateCount;
+                        } catch (Exception e) {
+                            log.info("Failed to INSERT into FACTTABLE3: {}", rowForFactTable3, e);
+                            return 0;
+                        } finally {
+                            progressBar.step();
+                        }
+                    })
+                    .sum();
+            log.info("Created {} rows in FACTTABLE3", numRowsCreated);
+        }
     }
 
     private Map<String, ?> generateRowForFactTable3(Handle sourceHandle, Map<String, Object> publisher, Semester semester) {
@@ -307,31 +318,35 @@ public class WarehouseLoaderApplication {
         Semester maxSemester = new SemesterImpl(YearMonth.of(maxDate.getYear() + 1, Month.MARCH));
         List<Semester> allSemesters = Stream.iterate(minSemester, semester -> semester.next().compareTo(maxSemester) <= 0, Semester::next).collect(toList());
 
-        int numRowsCreated = StreamEx.of(allCampuses).cross(allSemesters)
-                .mapKeyValue(((dormitory, semester) -> createRowForFactTable4(sourceDatabase, dormitory, semester)))
-                .mapToInt(row -> {
-                    try {
-                        int updatedRows = warehouse.createUpdate(
-                                "INSERT INTO orac3rd.facttable4 (" +
-                                " id, avg_num_of_persons_in_one_room, students_with_only_5_marks\n" +
-                                "                               , students_with_only_4_5_marks, students_with_3_4_5_marks, num_of_students_with_debts\n" +
-                                "                               , campusid, timeid" +
-                                ")\n" +
-                                "VALUES (" +
-                                " :id, :avg_num_of_persons_in_one_room, :students_with_only_5_marks, :students_with_only_4_5_marks\n" +
-                                "       , :students_with_3_4_5_marks, :num_of_students_with_debts, :campusid, :timeid" +
-                                ")")
-                                .bindMap(row)
-                                .execute();
-                        log.info("Successful INSERT into FACTTABLE4: {}", row);
-                        return updatedRows;
-                    } catch (Exception e) {
-                        log.error("Failed to INSERT into FACTTABLE4: {}", row, e);
-                        return 0;
-                    }
-                })
-                .sum();
-        log.info("Created {} rows in FACTTABLE4", numRowsCreated);
+        try (ProgressBar progressBar = new ProgressBar("Writing FactTable4", (long) allCampuses.size() * allSemesters.size())) {
+            int numRowsCreated = StreamEx.of(allCampuses).cross(allSemesters)
+                    .mapKeyValue(((dormitory, semester) -> createRowForFactTable4(sourceDatabase, dormitory, semester)))
+                    .mapToInt(row -> {
+                        try {
+                            int updatedRows = warehouse.createUpdate(
+                                    "INSERT INTO orac3rd.facttable4 (" +
+                                    " id, avg_num_of_persons_in_one_room, students_with_only_5_marks\n" +
+                                    "                               , students_with_only_4_5_marks, students_with_3_4_5_marks, num_of_students_with_debts\n" +
+                                    "                               , campusid, timeid" +
+                                    ")\n" +
+                                    "VALUES (" +
+                                    " :id, :avg_num_of_persons_in_one_room, :students_with_only_5_marks, :students_with_only_4_5_marks\n" +
+                                    "       , :students_with_3_4_5_marks, :num_of_students_with_debts, :campusid, :timeid" +
+                                    ")")
+                                    .bindMap(row)
+                                    .execute();
+                            log.info("Successful INSERT into FACTTABLE4: {}", row);
+                            return updatedRows;
+                        } catch (Exception e) {
+                            log.error("Failed to INSERT into FACTTABLE4: {}", row, e);
+                            return 0;
+                        } finally {
+                            progressBar.step();
+                        }
+                    })
+                    .sum();
+            log.info("Created {} rows in FACTTABLE4", numRowsCreated);
+        }
     }
 
     private Map<String, ?> createRowForFactTable4(Handle sourceDatabase, Dormitory dormitory, Semester semester) {
