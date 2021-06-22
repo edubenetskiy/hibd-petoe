@@ -15,6 +15,6 @@ public class DatabaseConfiguration {
     @Produces
     @Named
     private static Jdbi warehouseJdbi() {
-        return Jdbi.create("jdbc:oracle:thin:@localhost:1523:XE", "orac3rd", "orac3rd");
+        return Jdbi.create("jdbc:oracle:thin:@localhost:1523:EE", "orac3rd", "orac3rd");
     }
 }

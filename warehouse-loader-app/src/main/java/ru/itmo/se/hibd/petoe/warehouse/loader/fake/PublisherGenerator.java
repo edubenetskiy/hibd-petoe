@@ -10,11 +10,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Named
-public class FakePublisherGenerator {
+public class PublisherGenerator {
 
     List<String> publisherTitles;
 
-    public FakePublisherGenerator() {
+    public PublisherGenerator() {
         publisherTitles = readPublisherTitles();
     }
 
@@ -25,7 +25,7 @@ public class FakePublisherGenerator {
     @SneakyThrows
     private List<String> readPublisherTitles() {
         return new String(
-                FakePublisherGenerator.class.getResource("/fake-data/publishers.txt")
+                PublisherGenerator.class.getResource("/additional-data/publishers.txt")
                         .openStream()
                         .readAllBytes(),
                 StandardCharsets.UTF_8)

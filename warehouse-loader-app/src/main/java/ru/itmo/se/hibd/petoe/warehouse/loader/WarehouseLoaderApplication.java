@@ -15,7 +15,7 @@ import org.jdbi.v3.core.Jdbi;
 import ru.itmo.se.hibd.petoe.warehouse.loader.domain.Dormitory;
 import ru.itmo.se.hibd.petoe.warehouse.loader.domain.Semester;
 import ru.itmo.se.hibd.petoe.warehouse.loader.domain.SemesterImpl;
-import ru.itmo.se.hibd.petoe.warehouse.loader.fake.FakePublisherGenerator;
+import ru.itmo.se.hibd.petoe.warehouse.loader.fake.PublisherGenerator;
 import ru.itmo.se.hibd.petoe.warehouse.loader.generators.FactTable1Generator;
 
 import java.nio.charset.StandardCharsets;
@@ -57,7 +57,7 @@ public class WarehouseLoaderApplication {
     @SneakyThrows
     private static List<String> readFakeDistricts() {
         return new String(
-                WarehouseLoaderApplication.class.getResource("/fake-data/districts.txt").openStream().readAllBytes(),
+                WarehouseLoaderApplication.class.getResource("/additional-data/districts.txt").openStream().readAllBytes(),
                 StandardCharsets.UTF_8
         ).lines().filter(StringUtils::isNotBlank).collect(toList());
     }
@@ -80,7 +80,7 @@ public class WarehouseLoaderApplication {
     Jdbi warehouseJdbi;
 
     @Inject
-    FakePublisherGenerator fakePublisherGenerator;
+    PublisherGenerator publisherGenerator;
 
     public static void main(String[] args) {
         try (SeContainer container = SeContainerInitializer.newInstance().initialize()) {
@@ -202,7 +202,7 @@ public class WarehouseLoaderApplication {
                 .mapToMap()
                 .map(map -> {
                     map.put("id", map.get("city").hashCode());
-                    map.put("publisher", fakePublisherGenerator.nextPublisher());
+                    map.put("publisher", publisherGenerator.nextPublisher());
                     map.put("country", "Россия");
                     return map;
                 })
@@ -325,27 +325,31 @@ public class WarehouseLoaderApplication {
             int numRowsCreated = StreamEx.of(allCampuses).cross(allSemesters)
                     .mapKeyValue(((dormitory, semester) -> createRowForFactTable4(sourceDatabase, dormitory, semester)))
                     .mapToInt(row -> {
-                        try {
-                            int updatedRows = warehouse.createUpdate(
-                                    "INSERT INTO orac3rd.facttable4 (" +
-                                    " id, avg_num_of_persons_in_one_room, students_with_only_5_marks\n" +
-                                    "                               , students_with_only_4_5_marks, students_with_3_4_5_marks, num_of_students_with_debts\n" +
-                                    "                               , campusid, timeid" +
-                                    ")\n" +
-                                    "VALUES (" +
-                                    " :id, :avg_num_of_persons_in_one_room, :students_with_only_5_marks, :students_with_only_4_5_marks\n" +
-                                    "       , :students_with_3_4_5_marks, :num_of_students_with_debts, :campusid, :timeid" +
-                                    ")")
-                                    .bindMap(row)
-                                    .execute();
-                            log.info("Successful INSERT into FACTTABLE4: {}", row);
-                            return updatedRows;
-                        } catch (Exception e) {
-                            log.error("Failed to INSERT into FACTTABLE4: {}", row, e);
-                            return 0;
-                        } finally {
-                            progressBar.step();
+                        if (progressBar.getCurrent() < 20_000) {
+                            try {
+                                int updatedRows = warehouse.createUpdate(
+                                        "INSERT INTO orac3rd.facttable4 (" +
+                                                " id, avg_num_of_persons_in_one_room, students_with_only_5_marks\n" +
+                                                "                               , students_with_only_4_5_marks, students_with_3_4_5_marks, num_of_students_with_debts\n" +
+                                                "                               , campusid, timeid" +
+                                                ")\n" +
+                                                "VALUES (" +
+                                                " :id, :avg_num_of_persons_in_one_room, :students_with_only_5_marks, :students_with_only_4_5_marks\n" +
+                                                "       , :students_with_3_4_5_marks, :num_of_students_with_debts, :campusid, :timeid" +
+                                                ")")
+                                        .bindMap(row)
+                                        .execute();
+                                log.info("Successful INSERT into FACTTABLE4: {}", row);
+                                return updatedRows;
+                                //      }
+                            } catch (Exception e) {
+                                log.error("Failed to INSERT into FACTTABLE4: {}", row, e);
+                                return 0;
+                            } finally {
+                                progressBar.step();
+                            }
                         }
+                        return 0;
                     })
                     .sum();
             log.info("Created {} rows in FACTTABLE4", numRowsCreated);
